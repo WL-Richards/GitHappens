@@ -37,6 +37,9 @@ namespace InventIT.Settings
             this.chk_UnlockOnPush = new System.Windows.Forms.CheckBox();
             this.btn_Test = new System.Windows.Forms.Button();
             this.chk_lockFileOnSave = new System.Windows.Forms.CheckBox();
+            this.txt_email = new System.Windows.Forms.TextBox();
+            this.lb_Email = new System.Windows.Forms.Label();
+            this.btn_SetEmail = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lb_gitPath
@@ -121,11 +124,42 @@ namespace InventIT.Settings
             this.chk_lockFileOnSave.UseVisualStyleBackColor = true;
             this.chk_lockFileOnSave.CheckedChanged += new System.EventHandler(this.chk_lockFileOnSave_CheckedChanged);
             // 
+            // txt_email
+            // 
+            this.txt_email.Location = new System.Drawing.Point(291, 116);
+            this.txt_email.Name = "txt_email";
+            this.txt_email.Size = new System.Drawing.Size(159, 20);
+            this.txt_email.TabIndex = 8;
+            // 
+            // lb_Email
+            // 
+            this.lb_Email.AutoSize = true;
+            this.lb_Email.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_Email.Location = new System.Drawing.Point(288, 98);
+            this.lb_Email.Name = "lb_Email";
+            this.lb_Email.Size = new System.Drawing.Size(48, 13);
+            this.lb_Email.TabIndex = 9;
+            this.lb_Email.Text = "Git Email";
+            // 
+            // btn_SetEmail
+            // 
+            this.btn_SetEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_SetEmail.Location = new System.Drawing.Point(468, 114);
+            this.btn_SetEmail.Name = "btn_SetEmail";
+            this.btn_SetEmail.Size = new System.Drawing.Size(75, 23);
+            this.btn_SetEmail.TabIndex = 10;
+            this.btn_SetEmail.Text = "Set Email";
+            this.btn_SetEmail.UseVisualStyleBackColor = true;
+            this.btn_SetEmail.Click += new System.EventHandler(this.btn_SetEmail_Click);
+            // 
             // GitSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(555, 151);
+            this.Controls.Add(this.btn_SetEmail);
+            this.Controls.Add(this.lb_Email);
+            this.Controls.Add(this.txt_email);
             this.Controls.Add(this.chk_lockFileOnSave);
             this.Controls.Add(this.btn_Test);
             this.Controls.Add(this.chk_UnlockOnPush);
@@ -152,5 +186,8 @@ namespace InventIT.Settings
         private System.Windows.Forms.CheckBox chk_UnlockOnPush;
         private System.Windows.Forms.Button btn_Test;
         private System.Windows.Forms.CheckBox chk_lockFileOnSave;
+        private System.Windows.Forms.TextBox txt_email;
+        private System.Windows.Forms.Label lb_Email;
+        private System.Windows.Forms.Button btn_SetEmail;
     }
 }

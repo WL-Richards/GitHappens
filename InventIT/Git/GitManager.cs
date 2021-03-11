@@ -32,9 +32,31 @@ namespace InventIT.Git
         /// <returns>Process exit code</returns>
         public static string testGit()
         {
-            return runGitCommand("--verison");
+            return runGitCommand("--verison").Trim();
         }
 
+        /// <summary>
+        /// Get the users set Git email
+        /// </summary>
+        /// <returns></returns>
+        public static string getUserEmail()
+        {
+            return runGitCommand("config user.email").Trim();
+        }
+
+        public static string setUserEmail(string email)
+        {
+            return runGitCommand(String.Format("config --global user.email {0}", email)).Trim();
+        }
+
+        /// <summary>
+        /// Get the top level of the current Git repo
+        /// </summary>
+        /// <returns></returns>
+        public static string getRepoRoot()
+        {
+           return runGitCommand("rev-parse --show-toplevel").Trim();
+        }
         /// <summary>
         /// On call start try to setup Git if it has not previously been set, return the status of the Git binary location
         /// </summary>
@@ -70,6 +92,54 @@ namespace InventIT.Git
             if (!runGitCommand("status").Contains("not a git repository"))
                 return true;
             return false;
+        }
+
+        /// <summary>
+        /// Open the Commit / Push dialog
+        /// </summary>
+        public static void openCommitDialog()
+        {
+            new CommitDialog().Show();
+        }
+
+
+
+        /// <summary>
+        /// Push content to the cloud
+        /// </summary>
+        /// <returns></returns>
+        public static string pushFiles()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Create a local commit
+        /// </summary>
+        /// <param name="message">Message to describe the commit</param>
+        /// <returns>Result of the Git proc.</returns>
+        public static string commitFile(string message)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Commit and Push a single file (eg. the lock file)
+        /// </summary>
+        /// <param name="message">Message to use with the single file push</param>
+        /// <returns></returns>
+        public static string pushLockFile(string message)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Pull down any new changes to the lock file
+        /// </summary>
+        /// <returns>Result of the Git Proc</returns>
+        public static string updateLockFile()
+        {
+            return "";
         }
 
         /// <summary>
@@ -115,7 +185,7 @@ namespace InventIT.Git
         /// <returns>Exit status of the process</returns>
         public static string installLFS()
         {
-            return runGitCommand("lfs install");
+            return runGitCommand("lfs install").Trim();
         }
     }
 }

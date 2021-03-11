@@ -33,6 +33,8 @@ namespace InventIT.Settings
             chk_lockFileOnSave.Checked = Properties.Settings.Default.lockOnSave;
             chk_LockOnOpen.Checked = Properties.Settings.Default.lockOnOpen;
             chk_UnlockOnPush.Checked = Properties.Settings.Default.unlockOnPush;
+
+            txt_email.Text = Git.GitManager.getUserEmail();
         }
 
         /// <summary>
@@ -116,6 +118,16 @@ namespace InventIT.Settings
         {
             Properties.Settings.Default.unlockOnPush = chk_UnlockOnPush.Checked;
             Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Set the Git email globally to the email set there
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_SetEmail_Click(object sender, EventArgs e)
+        {
+            GitManager.setUserEmail(txt_email.Text.Trim());
         }
     }
 }

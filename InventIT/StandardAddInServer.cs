@@ -64,6 +64,16 @@ namespace InventIT
             {
                 Git.GitManager.installLFS();
             }
+
+            // If the users email is not set take them to the 
+            if(Git.GitManager.getUserEmail().Trim().Length <= 0)
+            {
+                // Check if the Git binary is Not and Promted the user to set it.
+                if (MessageBox.Show("Git Email Not Set (Required to lock files), Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    new Settings.GitSettings().ShowDialog();
+                }
+            }
         }
 
         /// <summary>
@@ -116,15 +126,15 @@ namespace InventIT
         /// <param name="HandlingCode"></param>
         private void ApplicationEvents_OnOpenDocument(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            if (BeforeOrAfter == EventTimingEnum.kAfter && !CurrentDocument.Equals(FullDocumentName))
+            if (BeforeOrAfter == EventTimingEnum.kAfter)
             {
                 // Redundant in the local scope, useful in the global
                 CurrentDocument = FullDocumentName;
                 cleanUpRibbons();
                 createUserInterface(CurrentEnvironment, Git.GitManager.inGitRepo(CurrentDocument));
-                
-
             }
+            if (BeforeOrAfter == EventTimingEnum.kBefore)
+                MessageBox.Show(Git.LockFileManager.isFileLocked(FullDocumentName).ToString());
             HandlingCode = HandlingCodeEnum.kEventHandled;
         }
 
@@ -180,8 +190,6 @@ namespace InventIT
             panel_FileManagement = tab_VersionControl.RibbonPanels.Add("File Management", "Autodesk:VCS:Edit_Manager", Guid.NewGuid().ToString());
             panel_Settings = tab_VersionControl.RibbonPanels.Add("Git Settings", "Autodesk:VCS:Settings", Guid.NewGuid().ToString());
 
-            
-
             #region Basic Git 
             // Create a commit file button
             btn_Commit = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Commit\nFile", "Autodesk:VCS:Commit", CommandTypesEnum.kFileOperationsCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallCommitPicture, IconManager.largeCommitPicture);
@@ -200,12 +208,16 @@ namespace InventIT
             #endregion
 
             #region File Management
-            btn_LockFile = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Manually Lock\nFile", "Autodesk:VCS:LockFile", CommandTypesEnum.kFilePropertyEditCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallLockFilePicture, IconManager.largeLockFilePicture);
+
+            // Create the Lock File button
+            btn_LockFile = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Toggle File\nLock", "Autodesk:VCS:LockFile", CommandTypesEnum.kFilePropertyEditCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallLockFilePicture, IconManager.largeLockFilePicture);
             btn_LockFile.OnExecute += Btn_LockFile_OnExecute;
 
             #endregion
 
             #region Git Settings
+
+            // Create a git settings option
             btn_GitSettings = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Settings", "Autodesk:VCS:SettingsButton", CommandTypesEnum.kNonShapeEditCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallSettingsPicture, IconManager.largeSettingsPicture);
             btn_GitSettings.OnExecute += Btn_GitSettings_OnExecute;
 
@@ -226,14 +238,29 @@ namespace InventIT
             panel_FileManagement.CommandControls.AddButton(btn_LockFile, true);
         }
 
+        /// <summary>
+        /// Opens the Git settings form
+        /// </summary>
+        /// <param name="Context"></param>
         private void Btn_GitSettings_OnExecute(NameValueMap Context)
         {
             new Settings.GitSettings().Show();
         }
 
+        /// <summary>
+        /// Manually Toggle the file lock
+        /// </summary>
+        /// <param name="Context"></param>
         private void Btn_LockFile_OnExecute(NameValueMap Context)
         {
-            MessageBox.Show("Lock File");
+            if (Git.LockFileManager.isFileLocked(CurrentDocument))
+            {
+                Git.LockFileManager.unlockFile(CurrentDocument);
+            }
+            else
+            {
+                Git.LockFileManager.lockFile(CurrentDocument);
+            }
         }
 
         /// <summary>
@@ -251,7 +278,7 @@ namespace InventIT
         /// <param name="Context">Caller/Handler info</param>
         private void M_commitButton_OnExecute(NameValueMap Context)
         {
-            MessageBox.Show("Commit");
+            Git.GitManager.openCommitDialog();
         }
 
         /// <summary>
@@ -259,18 +286,11 @@ namespace InventIT
         /// </summary>
         public void Deactivate()
         {
-            // This method is called by Inventor when the AddIn is unloaded.
-            // The AddIn will be unloaded either manually by the user or
-            // when the Inventor session is terminated
-
-            // TODO: Add ApplicationAddInServer.Deactivate implementation
-
             // Clean up non-null objects
             cleanUpRibbons();
 
             // Release objects.
             m_inventorApplication = null;
-
 
             // Run garbage collection
             GC.Collect();
