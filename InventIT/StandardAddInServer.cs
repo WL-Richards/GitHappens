@@ -20,6 +20,8 @@ namespace InventIT
         // UI Management
         private UserInterfaceManager UIManger;
         private UserInterfaceEvents UIEventManger;
+        private ApplicationEvents ApplicationEventsManager;
+
 
         // Currently loaded environment
         private string CurrentEnvironment = "";
@@ -47,7 +49,18 @@ namespace InventIT
         /// </summary>
         public StandardAddInServer()
         {
-
+            if(Git.GitManager.setupGit().Equals("Not Found"))
+            {
+                // Check if the Git binary is Not and Promted the user to set it.
+                if(MessageBox.Show("Git Path Not Set, Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    new Settings.GitSettings().ShowDialog();
+                }
+            }
+            else
+            {
+                Git.GitManager.installLFS();
+            }
         }
 
         /// <summary>
@@ -68,11 +81,41 @@ namespace InventIT
 
                 // Create an event handler for when the environment changes (eg. Start Screen (ZeroDoc) -> Part File)
                 this.UIEventManger.OnEnvironmentChange += UIEventManger_OnEnvironmentChange;
+                this.ApplicationEventsManager = m_inventorApplication.ApplicationEvents;
+                this.ApplicationEventsManager.OnOpenDocument += ApplicationEvents_OnOpenDocument;
+                this.ApplicationEventsManager.OnSaveDocument += ApplicationEventsManager_OnSaveDocument;
 
                 // Get the applications UI manager
                 this.UIManger = m_inventorApplication.UserInterfaceManager;
             }
 
+        }
+
+        /// <summary>
+        /// Called on Document Save
+        /// </summary>
+        /// <param name="DocumentObject"></param>
+        /// <param name="BeforeOrAfter"></param>
+        /// <param name="Context"></param>
+        /// <param name="HandlingCode"></param>
+        private void ApplicationEventsManager_OnSaveDocument(_Document DocumentObject, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Called when a new Document is opened
+        /// </summary>
+        /// <param name="DocumentObject"></param>
+        /// <param name="FullDocumentName"></param>
+        /// <param name="BeforeOrAfter"></param>
+        /// <param name="Context"></param>
+        /// <param name="HandlingCode"></param>
+        private void ApplicationEvents_OnOpenDocument(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
+        {
+            if(BeforeOrAfter == EventTimingEnum.kAfter)
+                MessageBox.Show(Git.GitManager.inGitRepo(FullDocumentName).ToString());
+            HandlingCode = HandlingCodeEnum.kEventHandled;
         }
 
         /// <summary>
@@ -102,7 +145,7 @@ namespace InventIT
                 else
                 {
                     createUserInterface(CurrentEnvironment);
-                    MessageBox.Show(m_inventorApplication.ActiveDocument.File.FullFileName);
+                   
                 }
 
                

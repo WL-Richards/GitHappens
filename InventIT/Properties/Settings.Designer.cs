@@ -37,7 +37,7 @@ namespace InventIT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool lockOnOpen {
             get {
                 return ((bool)(this["lockOnOpen"]));
@@ -61,7 +61,7 @@ namespace InventIT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool unlockOnPush {
             get {
                 return ((bool)(this["unlockOnPush"]));

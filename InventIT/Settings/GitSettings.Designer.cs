@@ -71,7 +71,7 @@ namespace InventIT.Settings
             // 
             // fd_gitExe
             // 
-            this.fd_gitExe.FileName = "openFileDialog1";
+            this.fd_gitExe.FileName = "git.exe";
             this.fd_gitExe.Title = "Path to Git Executable";
             // 
             // chk_LockOnOpen

@@ -27,23 +27,7 @@ namespace InventIT.Settings
         /// <param name="e"></param>
         private void GitSettings_Load(object sender, EventArgs e)
         {
-            if(Properties.Settings.Default.gitPath.Length <= 0)
-            {
-                txt_gitPath.Text = GitManager.gitExistsAtDefault();
-
-                // If git is stored at the default location set that as the gitPath
-                if(!txt_gitPath.Text.Equals("Not Found"))
-                {
-                    Properties.Settings.Default.gitPath = txt_gitPath.Text;
-                    Properties.Settings.Default.Save();
-                }
-            }
-            else
-            {
-                // Load saved path from Properties
-                txt_gitPath.Text = Properties.Settings.Default.gitPath;
-            }
-
+            txt_gitPath.Text = Properties.Settings.Default.gitPath;
 
             // Load saved values
             chk_lockFileOnSave.Checked = Properties.Settings.Default.lockOnSave;
@@ -51,32 +35,38 @@ namespace InventIT.Settings
             chk_UnlockOnPush.Checked = Properties.Settings.Default.unlockOnPush;
         }
 
+        /// <summary>
+        /// Called when the button to browse to a new file is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_browseGitPath_Click(object sender, EventArgs e)
         {
             fd_gitExe.DefaultExt = "*.exe";
             if(fd_gitExe.ShowDialog() == DialogResult.OK)
             {
                 txt_gitPath.Text = fd_gitExe.FileName;
-                btn_Test_Click(this, e);
 
                 // Update Git Path
-                Properties.Settings.Default.gitPath = txt_gitPath.Text;
+                Properties.Settings.Default.gitPath = fd_gitExe.FileName.Trim();
                 Properties.Settings.Default.Save();
+
+                // When the git executable is changed try to install lfs
+                GitManager.installLFS();
             }
         }
 
+        /// <summary>
+        /// When the Test binary button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_Test_Click(object sender, EventArgs e)
         {
-            if (!txt_gitPath.Text.Equals("Not Found")) {
-                Process gitProc = new Process();
-                gitProc.StartInfo.FileName = txt_gitPath.Text.Trim();
-                gitProc.StartInfo.Arguments = String.Format("--version && {0} lfs install", txt_gitPath.Text.Trim());
-                gitProc.StartInfo.UseShellExecute = false;
-                gitProc.StartInfo.CreateNoWindow = true;
-                gitProc.StartInfo.RedirectStandardOutput = true;
-                gitProc.Start();
-                gitProc.WaitForExit();
-                string output = gitProc.StandardOutput.ReadToEnd();
+
+            if (!Properties.Settings.Default.gitPath.Equals("Not Found")) {
+
+                string output = GitManager.testGit();
                 if (output.Contains("git version"))
                     MessageBox.Show("Git Successfully Setup.", "Success");
                 else
@@ -89,6 +79,11 @@ namespace InventIT.Settings
             }
         }
 
+        /// <summary>
+        /// On Change of lock file on save set the value and then uncheck lockOnOpen as one can only be set at a time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void chk_lockFileOnSave_CheckedChanged(object sender, EventArgs e)
         {
             if (chk_lockFileOnSave.Checked)
@@ -101,6 +96,11 @@ namespace InventIT.Settings
             MessageBox.Show(Properties.Settings.Default.lockOnOpen.ToString() + " " + Properties.Settings.Default.lockOnSave.ToString());
         }
 
+        /// <summary>
+        /// On Change of lock file on open set the value and then uncheck lockOnSave as one can only be set at a time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void chk_LockOnOpen_CheckedChanged(object sender, EventArgs e)
         {
             if (chk_LockOnOpen.Checked)
@@ -113,6 +113,7 @@ namespace InventIT.Settings
             MessageBox.Show(Properties.Settings.Default.lockOnOpen.ToString() + " " + Properties.Settings.Default.lockOnSave.ToString());
         }
 
+        // Set the value of unlock on push
         private void chk_UnlockOnPush_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.unlockOnPush = chk_UnlockOnPush.Checked;
