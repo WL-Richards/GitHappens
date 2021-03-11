@@ -93,7 +93,6 @@ namespace InventIT.Settings
             }
             Properties.Settings.Default.lockOnSave = chk_lockFileOnSave.Checked;
             Properties.Settings.Default.Save();
-            MessageBox.Show(Properties.Settings.Default.lockOnOpen.ToString() + " " + Properties.Settings.Default.lockOnSave.ToString());
         }
 
         /// <summary>
@@ -110,7 +109,6 @@ namespace InventIT.Settings
             }
             Properties.Settings.Default.lockOnOpen = chk_LockOnOpen.Checked;
             Properties.Settings.Default.Save();
-            MessageBox.Show(Properties.Settings.Default.lockOnOpen.ToString() + " " + Properties.Settings.Default.lockOnSave.ToString());
         }
 
         // Set the value of unlock on push

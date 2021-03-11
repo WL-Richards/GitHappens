@@ -26,6 +26,9 @@ namespace InventIT
         // Currently loaded environment
         private string CurrentEnvironment = "";
 
+        // Currently loaded document
+        private string CurrentDocument = "";
+
         // Buttons 
         private ButtonDefinition btn_Commit;
         private ButtonDefinition btn_Checkout;
@@ -42,17 +45,17 @@ namespace InventIT
         private RibbonPanel panel_BasicGit;
         private RibbonPanel panel_Settings;
 
-       
+
 
         /// <summary>
         /// AddInServer Constructor, Rarely used as the Activate method serves a similar purpose
         /// </summary>
         public StandardAddInServer()
         {
-            if(Git.GitManager.setupGit().Equals("Not Found"))
+            if (Git.GitManager.setupGit().Equals("Not Found"))
             {
                 // Check if the Git binary is Not and Promted the user to set it.
-                if(MessageBox.Show("Git Path Not Set, Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (MessageBox.Show("Git Path Not Set, Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     new Settings.GitSettings().ShowDialog();
                 }
@@ -113,8 +116,15 @@ namespace InventIT
         /// <param name="HandlingCode"></param>
         private void ApplicationEvents_OnOpenDocument(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            if(BeforeOrAfter == EventTimingEnum.kAfter)
-                MessageBox.Show(Git.GitManager.inGitRepo(FullDocumentName).ToString());
+            if (BeforeOrAfter == EventTimingEnum.kAfter && !CurrentDocument.Equals(FullDocumentName))
+            {
+                // Redundant in the local scope, useful in the global
+                CurrentDocument = FullDocumentName;
+                cleanUpRibbons();
+                createUserInterface(CurrentEnvironment, Git.GitManager.inGitRepo(CurrentDocument));
+                
+
+            }
             HandlingCode = HandlingCodeEnum.kEventHandled;
         }
 
@@ -131,24 +141,16 @@ namespace InventIT
             // Check if the environment state changing is creating a new environment or resuming a previously opened one while also making sure the following is only run once per environment init
             if ((EnvironmentState == EnvironmentStateEnum.kActivateEnvironmentState || EnvironmentState == EnvironmentStateEnum.kResumeEnvironmentState) && CurrentEnvironment != Environment.DisplayName)
             {
-                // TODO: Instead of recreating the entire tab each time, check to see if it has previously been created and re-use that instance. Currently it just kills everything
-                cleanUpRibbons();
 
                 // Set the CurrentEnvironment variable so this code is only run once per change
                 CurrentEnvironment = Environment.DisplayName;
 
                 // Convert the Environment name "Inventor" to ZeroDoc as that is its internal name
                 if (CurrentEnvironment.Equals("Inventor"))
-                    createUserInterface("ZeroDoc");
-
-                // If unnecessary simply pass the environment name to UI creator.
-                else
                 {
-                    createUserInterface(CurrentEnvironment);
-                   
+                    cleanUpRibbons();
+                    createUserInterface("ZeroDoc", false);
                 }
-
-               
 
                 // Finally set the handling state of the handler
                 HandlingCode = HandlingCodeEnum.kEventHandled;
@@ -161,26 +163,29 @@ namespace InventIT
 
         }
 
-       
+
 
         /// <summary>
         /// Create the Version Control Tab and sub panels
         /// </summary>
         /// <param name="environmentName">The name of the current environment so that we create the tab in the correct location</param>
-        private void createUserInterface(String environmentName)
+        private void createUserInterface(String environmentName, bool inGitRepo)
         {
             // Create and add the versionControl tab to the current environment
             tab_VersionControl = UIManger.Ribbons[environmentName].RibbonTabs.Add("Version Control", "Autodesk:VCS", Guid.NewGuid().ToString());
+
 
             // Create a push / pull / commit panel for basic git functionality
             panel_BasicGit = tab_VersionControl.RibbonPanels.Add("Push & Pull", "Autodesk:VCS:Commit_Push", Guid.NewGuid().ToString());
             panel_FileManagement = tab_VersionControl.RibbonPanels.Add("File Management", "Autodesk:VCS:Edit_Manager", Guid.NewGuid().ToString());
             panel_Settings = tab_VersionControl.RibbonPanels.Add("Git Settings", "Autodesk:VCS:Settings", Guid.NewGuid().ToString());
 
+            
+
             #region Basic Git 
             // Create a commit file button
             btn_Commit = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Commit\nFile", "Autodesk:VCS:Commit", CommandTypesEnum.kFileOperationsCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallCommitPicture, IconManager.largeCommitPicture);
-
+            
             // Link that commit button to a handler
             btn_Commit.OnExecute += M_commitButton_OnExecute;
 
@@ -191,9 +196,6 @@ namespace InventIT
             // Link the pull button to a functional handler
             btn_Checkout.OnExecute += M_checkoutButton_OnExecute;
 
-            // Finally add all the buttons to the corresponding panels with large icons enabled
-            panel_BasicGit.CommandControls.AddButton(btn_Commit, true);
-            panel_BasicGit.CommandControls.AddButton(btn_Checkout, true);
 
             #endregion
 
@@ -201,7 +203,6 @@ namespace InventIT
             btn_LockFile = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Manually Lock\nFile", "Autodesk:VCS:LockFile", CommandTypesEnum.kFilePropertyEditCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallLockFilePicture, IconManager.largeLockFilePicture);
             btn_LockFile.OnExecute += Btn_LockFile_OnExecute;
 
-            panel_FileManagement.CommandControls.AddButton(btn_LockFile, true);
             #endregion
 
             #region Git Settings
@@ -210,6 +211,19 @@ namespace InventIT
 
             panel_Settings.CommandControls.AddButton(btn_GitSettings, true);
             #endregion
+
+            // If we aren't in a Git Repo disable commit options
+            if (!inGitRepo)
+            {
+                btn_Commit.Enabled = false;
+                btn_Checkout.Enabled = false;
+                btn_LockFile.Enabled = false;
+            }
+
+            // Finally add all the buttons to the corresponding panels with large icons enabled
+            panel_BasicGit.CommandControls.AddButton(btn_Commit, true);
+            panel_BasicGit.CommandControls.AddButton(btn_Checkout, true);
+            panel_FileManagement.CommandControls.AddButton(btn_LockFile, true);
         }
 
         private void Btn_GitSettings_OnExecute(NameValueMap Context)
@@ -279,7 +293,7 @@ namespace InventIT
                 btn_Checkout.OnExecute -= M_checkoutButton_OnExecute;
             }
 
-            if(panel_FileManagement != null)
+            if (panel_FileManagement != null)
             {
                 panel_FileManagement.Delete();
 
@@ -287,7 +301,7 @@ namespace InventIT
                 btn_LockFile.OnExecute -= Btn_LockFile_OnExecute;
             }
 
-            if(panel_Settings != null)
+            if (panel_Settings != null)
             {
                 panel_Settings.Delete();
 
