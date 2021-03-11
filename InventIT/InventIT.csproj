@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3DC284CE-6572-439D-ADA3-E703FF8498B6}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>InventIT</RootNamespace>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autodesk.Inventor.Interop, Version=25.0.0.0, Culture=neutral, PublicKeyToken=d84147f8b4276564, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Inventor 2021\Bin\Public Assemblies\Autodesk.Inventor.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Git\GitManager.cs" />
+    <Compile Include="IconManager.cs" />
+    <Compile Include="PictureConverter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\GitSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Settings\GitSettings.Designer.cs">
+      <DependentUpon>GitSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StandardAddInServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="InventIT.X.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Autodesk.InventIT.Inventor.addin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Settings\GitSettings.resx">
+      <DependentUpon>GitSettings.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\checkOut_large.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\commit_large.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\commit_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\checkOut_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lockFile_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lockFile_large.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings_large.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+        if exist "%25ProgramFiles%25\Microsoft SDKs\Windows\v6.0\bin\mt.exe" set var="%25ProgramFiles%25\Microsoft SDKs\Windows\v6.0\bin\mt.exe"
+		if exist "%25ProgramFiles%25\Microsoft SDKs\Windows\v7.0\bin\mt.exe" set var="%25ProgramFiles%25\Microsoft SDKs\Windows\v7.0\bin\mt.exe"
+		if exist "%25ProgramFiles%25\Microsoft SDKs\Windows\v6.0A\bin\mt.exe" set var="%25ProgramFiles%25\Microsoft SDKs\Windows\v6.0A\bin\mt.exe"
+		if exist "%25ProgramFiles%25\Microsoft SDKs\Windows\v7.0A\bin\mt.exe" set var="%25ProgramFiles%25\Microsoft SDKs\Windows\v7.0A\bin\mt.exe"
+		if exist "%25PROGRAMFILES(x86)%25\Microsoft SDKs\Windows\v6.0A\bin\mt.exe" set var=%25PROGRAMFILES(x86)%25\Microsoft SDKs\Windows\v6.0A\bin\mt.exe"
+		if exist "%25PROGRAMFILES(x86)%25\Microsoft SDKs\Windows\v7.0A\bin\mt.exe" set var="%25PROGRAMFILES(x86)%25\Microsoft SDKs\Windows\v7.0A\bin\mt.exe" 
+		if exist "%25PROGRAMFILES%25\Windows Kits\8.0\bin\x64\mt.exe" set var="%25PROGRAMFILES%25\Windows Kits\8.0\bin\x64\mt.exe"
+		if exist "%25PROGRAMFILES%25\Windows Kits\8.0\bin\x86\mt.exe" set var="%25PROGRAMFILES%25\Windows Kits\8.0\bin\x86\mt.exe"
+		if exist "%25PROGRAMFILES(x86)%25\Windows Kits\8.0\bin\x64\mt.exe" set var="%25PROGRAMFILES(x86)%25\Windows Kits\8.0\bin\x64\mt.exe"
+		if exist "%25PROGRAMFILES(x86)%25\Windows Kits\8.0\bin\x86\mt.exe" set var="%25PROGRAMFILES(x86)%25\Windows Kits\8.0\bin\x86\mt.exe"
+		if exist "%25PROGRAMFILES(x86)%25\Windows Kits\10\bin\x64\mt.exe" set var="%25PROGRAMFILES(x86)%25\Windows Kits\10\bin\x64\mt.exe"
+		if exist "%25PROGRAMFILES(x86)%25\Windows Kits\10\bin\x86\mt.exe" set var="%25PROGRAMFILES(x86)%25\Windows Kits\10\bin\x86\mt.exe"
+        call  %25var%25 -manifest "$(ProjectDir)InventIT.X.manifest" -outputresource:"$(TargetPath)";#2
+			XCopy "$(TargetPath)" "%25AppData%25\Autodesk\ApplicationPlugins\$(TargetName)\" /Y /R
+		    XCopy "$(ProjectDir)Autodesk.InventIT.Inventor.addin" "%25AppData%25\Autodesk\ApplicationPlugins\$(TargetName)\" /Y /R   
+	</PostBuildEvent>
+  </PropertyGroup>
+</Project>

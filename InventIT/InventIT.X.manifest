@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+
+  <assemblyIdentity name="InventIT" version="1.0.0.0"></assemblyIdentity>
+
+  <clrClass clsid="{fecf1836-db82-4457-bf2f-5298f719cba9}" progid="InventIT.StandardAddInServer" threadingModel="Both" name="InventIT.StandardAddInServer" runtimeVersion=""></clrClass>
+
+  <file name="InventIT.dll" hashalg="SHA1"></file>
+
+</assembly>
