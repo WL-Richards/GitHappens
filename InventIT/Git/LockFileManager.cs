@@ -25,6 +25,7 @@ namespace InventIT.Git
             if (GitManager.inGitRepo(filePath))
             {
                 string lockFilePath = GitManager.getRepoRoot() + "/git_lock.lck";
+                string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
                 string[] lines = File.ReadAllLines(lockFilePath);
 
@@ -40,7 +41,7 @@ namespace InventIT.Git
                 foreach (string line in lines)
                 {
                     // If the line contains the current file
-                    if (line.Contains(Path.GetFileName(filePath).Trim()))
+                    if (line.Contains(filePath.Replace(topLevel, "").Trim()))
                     {
                         // Check if our email is associated with that file, i
                         if (line.Contains(GitManager.getUserEmail()))
@@ -102,13 +103,14 @@ namespace InventIT.Git
             if (GitManager.inGitRepo(filePath))
             {
                 string lockFilePath = GitManager.getRepoRoot() + "/git_lock.lck";
+                string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
                 // Check if the file is not locked and we can edit it
                 if (!isFileLocked(filePath) && canEditFile(filePath))
                 {
                     using (StreamWriter sw = File.AppendText(lockFilePath))
                     {
-                        sw.WriteLine(String.Format("{0}, {1}", Path.GetFileName(filePath), GitManager.getUserEmail()));
+                        sw.WriteLine(String.Format("{0}, {1}", filePath.Replace(topLevel, ""), GitManager.getUserEmail()));
                     }
                 }
             }
@@ -123,12 +125,13 @@ namespace InventIT.Git
             if (GitManager.inGitRepo(filePath))
             {
                 string lockFilePath = GitManager.getRepoRoot() + "/git_lock.lck";
+                string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
                 // Verify to make sure the file we are trying to lock is not already locked
                 if (isFileLocked(filePath) && canEditFile(filePath))
                 {
                     // Write the new data to the lock file
-                    var lines = File.ReadAllLines(lockFilePath).Where(line => !line.Trim().Contains(Path.GetFileName(filePath))).ToArray();
+                    var lines = File.ReadAllLines(lockFilePath).Where(line => !line.Trim().Contains(filePath.Replace(topLevel, ""))).ToArray();
                     File.WriteAllLines(lockFilePath, lines);
                 }
             }
