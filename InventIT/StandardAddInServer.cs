@@ -2,6 +2,7 @@ using Inventor;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace InventIT
 {
@@ -66,7 +67,7 @@ namespace InventIT
             }
 
             // If the users email is not set take them to the 
-            if(Git.GitManager.getUserEmail().Trim().Length <= 0)
+            if (Git.GitManager.getUserEmail().Trim().Length <= 0)
             {
                 // Check if the Git binary is Not and Promted the user to set it.
                 if (MessageBox.Show("Git Email Not Set (Required to lock files), Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -128,13 +129,37 @@ namespace InventIT
         {
             if (BeforeOrAfter == EventTimingEnum.kAfter)
             {
+                if (Git.LockFileManager.isFileLocked(CurrentDocument) && !Git.LockFileManager.canEditFile(CurrentDocument))
+                {
+                    if (MessageBox.Show("This file is currently locked by another user. Any changes made to this WILL NOT BE SAVED! Do you want to Proceed", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    {
+                        DocumentObject.Close();
+                    }
+                    else
+                    {
+                        cleanUpRibbons();
+                        createUserInterface(CurrentEnvironment, Git.GitManager.inGitRepo(CurrentDocument));
+                    }
+                }
+                else
+                {
+                    cleanUpRibbons();
+                    createUserInterface(CurrentEnvironment, Git.GitManager.inGitRepo(CurrentDocument));
+                }
+                
+            }
+            else if (BeforeOrAfter == EventTimingEnum.kBefore)
+            {
                 // Redundant in the local scope, useful in the global
                 CurrentDocument = FullDocumentName;
-                cleanUpRibbons();
-                createUserInterface(CurrentEnvironment, Git.GitManager.inGitRepo(CurrentDocument));
+
+                if (Git.GitManager.inGitRepo(CurrentDocument))
+                {
+                    // Update the lock file
+                    Git.GitManager.updateLockFile();
+                }
+
             }
-            if (BeforeOrAfter == EventTimingEnum.kBefore)
-                MessageBox.Show(Git.LockFileManager.isFileLocked(FullDocumentName).ToString());
             HandlingCode = HandlingCodeEnum.kEventHandled;
         }
 
@@ -193,7 +218,7 @@ namespace InventIT
             #region Basic Git 
             // Create a commit file button
             btn_Commit = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Commit\nFile", "Autodesk:VCS:Commit", CommandTypesEnum.kFileOperationsCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallCommitPicture, IconManager.largeCommitPicture);
-            
+
             // Link that commit button to a handler
             btn_Commit.OnExecute += M_commitButton_OnExecute;
 
@@ -269,7 +294,8 @@ namespace InventIT
         /// <param name="Context">Caller/Handler info</param>
         private void M_checkoutButton_OnExecute(NameValueMap Context)
         {
-            MessageBox.Show("Checkout");
+            if (Git.GitManager.inGitRepo(CurrentDocument))
+                Git.GitManager.updateFiles();
         }
 
         /// <summary>

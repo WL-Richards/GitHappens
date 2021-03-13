@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace InventIT.Git
 {
+    /// <summary>
+    /// Handles all process interaction with Git
+    /// </summary>
     public class GitManager
     {
         /// <summary>
@@ -102,8 +106,6 @@ namespace InventIT.Git
             new CommitDialog().Show();
         }
 
-
-
         /// <summary>
         /// Push content to the cloud
         /// </summary>
@@ -111,6 +113,21 @@ namespace InventIT.Git
         public static string pushFiles()
         {
             return "";
+        }
+
+        /// <summary>
+        /// Updates all files in the repository forcing the remote changes
+        /// </summary>
+        public static void updateFiles()
+        {
+            if (MessageBox.Show("This will overwrite any uncommitted changes. Are you sure you wish to continue", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                new Thread(new ThreadStart(() =>
+                {
+                    runGitCommand("fetch");
+                    runGitCommand("pull -X theirs");
+                }));
+            }
         }
 
         /// <summary>
@@ -124,22 +141,27 @@ namespace InventIT.Git
         }
 
         /// <summary>
-        /// Commit and Push a single file (eg. the lock file)
+        /// Commit and Push the lock file to lock editing
         /// </summary>
-        /// <param name="message">Message to use with the single file push</param>
         /// <returns></returns>
-        public static string pushLockFile(string message)
+        public static void pushLockFile(string filePath, bool locked)
         {
-            return "";
+            // Commit message that uses the name of the commit in GitHub
+            string commitMessage = String.Format("has now {0} {1}", locked ? "locked" : "unlocked", Path.GetFileName(filePath));
+            runGitCommand(String.Format("add {0}/.git_lock.lck", GitManager.getRepoRoot()));
+            runGitCommand(String.Format("commit -m \"{0}\"", commitMessage));
+            runGitCommand("push");
+            MessageBox.Show(String.Format(Path.GetFileName(filePath) + " has successfully been {0}", locked ? "locked" : "unlocked"), "Information");
         }
 
         /// <summary>
         /// Pull down any new changes to the lock file
         /// </summary>
         /// <returns>Result of the Git Proc</returns>
-        public static string updateLockFile()
+        public static void updateLockFile()
         {
-            return "";
+            runGitCommand("fetch");
+            runGitCommand(String.Format("checkout origin/main {0}/.git_lock.lck", getRepoRoot()));
         }
 
         /// <summary>
@@ -165,9 +187,14 @@ namespace InventIT.Git
                 // Checking standard error / output
                 string error = gitProc.StandardError.ReadToEnd();
                 if (error.Length > 0)
+                {
                     return error;
+                }
                 else
+                {
                     return gitProc.StandardOutput.ReadToEnd();
+                }
+                
             }
 
             else

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace InventIT.Git
 {
@@ -21,11 +22,17 @@ namespace InventIT.Git
         private static bool[] getFilePerms(string filePath)
         {
             // File is locked and we cant edit it
-            bool[] locked = {true, false};
+            bool[] locked = { true, false };
             if (GitManager.inGitRepo(filePath))
             {
-                string lockFilePath = GitManager.getRepoRoot() + "/git_lock.lck";
+                string lockFilePath = GitManager.getRepoRoot() + "/.git_lock.lck";
                 string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
+
+                // Check if the lock file exists
+                if (!File.Exists(lockFilePath))
+                {
+                    File.Create(lockFilePath);
+                }
 
                 string[] lines = File.ReadAllLines(lockFilePath);
 
@@ -56,7 +63,7 @@ namespace InventIT.Git
                             locked[0] = true;
                             locked[1] = false;
                         }
-                        
+
                     }
                     // If the file is not found in that line set locked = false as if it is found it will be evaluated
                     else
@@ -67,7 +74,7 @@ namespace InventIT.Git
                     }
                 }
 
-                
+
 
             }
 
@@ -98,11 +105,11 @@ namespace InventIT.Git
         /// Lock the passed file and push that change to the cloud
         /// </summary>
         /// <param name="filePath">Path to locked file</param>
-        public static void lockFile(string filePath)
+        private static void lockFileLocal(string filePath)
         {
             if (GitManager.inGitRepo(filePath))
             {
-                string lockFilePath = GitManager.getRepoRoot() + "/git_lock.lck";
+                string lockFilePath = GitManager.getRepoRoot() + "/.git_lock.lck";
                 string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
                 // Check if the file is not locked and we can edit it
@@ -120,11 +127,11 @@ namespace InventIT.Git
         /// Unlock the requested file
         /// </summary>
         /// <param name="filePath"></param>
-        public static void unlockFile(string filePath)
+        private static void unlockFileLocal(string filePath)
         {
             if (GitManager.inGitRepo(filePath))
             {
-                string lockFilePath = GitManager.getRepoRoot() + "/git_lock.lck";
+                string lockFilePath = GitManager.getRepoRoot() + "/.git_lock.lck";
                 string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
                 // Verify to make sure the file we are trying to lock is not already locked
@@ -135,6 +142,32 @@ namespace InventIT.Git
                     File.WriteAllLines(lockFilePath, lines);
                 }
             }
+        }
+
+        /// <summary>
+        /// Unlocks file and pushes to git
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void unlockFile(string filePath)
+        {
+            new Thread(new ThreadStart(() =>
+            {
+                unlockFileLocal(filePath);
+                GitManager.pushLockFile(filePath, false);
+            })).Start();
+        }
+
+        /// <summary>
+        /// Locks the file and pushes to Git
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void lockFile(string filePath)
+        {
+            new Thread(new ThreadStart(() =>
+            {
+                lockFileLocal(filePath);
+                GitManager.pushLockFile(filePath, true);
+            })).Start();
         }
     }
 }
