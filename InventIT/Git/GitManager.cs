@@ -103,7 +103,7 @@ namespace InventIT.Git
         /// </summary>
         public static void openCommitDialog()
         {
-            new CommitDialog().Show();
+            new CommitDialog().ShowDialog();
         }
 
         /// <summary>
@@ -125,6 +125,7 @@ namespace InventIT.Git
                 new Thread(new ThreadStart(() =>
                 {
                     runGitCommand("fetch");
+                    runGitCommand("restore .");
                     runGitCommand("pull -X theirs");
                 }));
             }
@@ -135,9 +136,9 @@ namespace InventIT.Git
         /// </summary>
         /// <param name="message">Message to describe the commit</param>
         /// <returns>Result of the Git proc.</returns>
-        public static string commitFile(string message)
+        public static string commitStaged(string message)
         {
-            return "";
+            return runGitCommand(String.Format("commit -m \"{0}\"", message));
         }
 
         /// <summary>
@@ -146,12 +147,34 @@ namespace InventIT.Git
         /// <returns></returns>
         public static void pushLockFile(string filePath, bool locked)
         {
-            // Commit message that uses the name of the commit in GitHub
-            string commitMessage = String.Format("has now {0} {1}", locked ? "locked" : "unlocked", Path.GetFileName(filePath));
-            runGitCommand(String.Format("add {0}/.git_lock.lck", GitManager.getRepoRoot()));
-            runGitCommand(String.Format("commit -m \"{0}\"", commitMessage));
-            runGitCommand("push");
-            MessageBox.Show(String.Format(Path.GetFileName(filePath) + " has successfully been {0}", locked ? "locked" : "unlocked"), "Information");
+            if (LockFileManager.canEditFile(filePath))
+            {
+                // Commit message that uses the name of the commit in GitHub
+                string commitMessage = String.Format("has now {0} {1}", locked ? "locked" : "unlocked", Path.GetFileName(filePath));
+                runGitCommand(String.Format("add {0}/.git_lock.lck", GitManager.getRepoRoot()));
+                runGitCommand(String.Format("commit -m \"{0}\"", commitMessage));
+                runGitCommand("push");
+                MessageBox.Show(String.Format(Path.GetFileName(filePath) + " has successfully been {0}", locked ? "locked" : "unlocked"), "Information");
+            }
+           
+        }
+
+        /// <summary>
+        /// Stage a file for commit
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void stageFile(string filePath)
+        {
+            MessageBox.Show(runGitCommand(String.Format("add {0}", filePath)));
+        }
+
+        /// <summary>
+        /// Unstage a file for commit
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void unstageFile(string filePath)
+        {
+            runGitCommand(String.Format("restore --staged {0}", filePath));
         }
 
         /// <summary>

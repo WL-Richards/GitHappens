@@ -148,26 +148,40 @@ namespace InventIT.Git
         /// Unlocks file and pushes to git
         /// </summary>
         /// <param name="filePath"></param>
-        public static void unlockFile(string filePath)
+        public static void unlockFile(string filePath, bool isAutoLock)
         {
-            new Thread(new ThreadStart(() =>
+            if (LockFileManager.canEditFile(filePath))
             {
-                unlockFileLocal(filePath);
-                GitManager.pushLockFile(filePath, false);
-            })).Start();
+                new Thread(new ThreadStart(() =>
+                {
+                    unlockFileLocal(filePath);
+                    GitManager.pushLockFile(filePath, false);
+                })).Start();
+            }
+            else if (!isAutoLock)
+            {
+                MessageBox.Show("This file is currently locked by another user", "Error");
+            }
         }
 
         /// <summary>
         /// Locks the file and pushes to Git
         /// </summary>
         /// <param name="filePath"></param>
-        public static void lockFile(string filePath)
+        public static void lockFile(string filePath, bool isAutoLock)
         {
-            new Thread(new ThreadStart(() =>
+            if (LockFileManager.canEditFile(filePath))
             {
-                lockFileLocal(filePath);
-                GitManager.pushLockFile(filePath, true);
-            })).Start();
+                new Thread(new ThreadStart(() =>
+                {
+                    lockFileLocal(filePath);
+                    GitManager.pushLockFile(filePath, true);
+                })).Start();
+            }
+            else if (!isAutoLock)
+            {
+                MessageBox.Show("This file is currently locked by another user", "Error");
+            }
         }
     }
 }

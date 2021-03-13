@@ -33,6 +33,8 @@ namespace InventIT.Git
             this.txt_commitMessage = new System.Windows.Forms.TextBox();
             this.btn_CommitPush = new System.Windows.Forms.Button();
             this.btn_Commit = new System.Windows.Forms.Button();
+            this.chkList_StagedList = new System.Windows.Forms.CheckedListBox();
+            this.lb_staged = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -55,7 +57,7 @@ namespace InventIT.Git
             this.txt_commitMessage.Location = new System.Drawing.Point(13, 30);
             this.txt_commitMessage.Multiline = true;
             this.txt_commitMessage.Name = "txt_commitMessage";
-            this.txt_commitMessage.Size = new System.Drawing.Size(643, 309);
+            this.txt_commitMessage.Size = new System.Drawing.Size(441, 304);
             this.txt_commitMessage.TabIndex = 1;
             // 
             // btn_CommitPush
@@ -79,18 +81,39 @@ namespace InventIT.Git
             this.btn_Commit.Text = "Commit";
             this.btn_Commit.UseMnemonic = false;
             this.btn_Commit.UseVisualStyleBackColor = false;
+            this.btn_Commit.Click += new System.EventHandler(this.btn_Commit_Click);
+            // 
+            // chkList_StagedList
+            // 
+            this.chkList_StagedList.FormattingEnabled = true;
+            this.chkList_StagedList.Location = new System.Drawing.Point(460, 30);
+            this.chkList_StagedList.Name = "chkList_StagedList";
+            this.chkList_StagedList.Size = new System.Drawing.Size(195, 304);
+            this.chkList_StagedList.TabIndex = 4;
+            // 
+            // lb_staged
+            // 
+            this.lb_staged.AutoSize = true;
+            this.lb_staged.Location = new System.Drawing.Point(457, 9);
+            this.lb_staged.Name = "lb_staged";
+            this.lb_staged.Size = new System.Drawing.Size(86, 13);
+            this.lb_staged.TabIndex = 5;
+            this.lb_staged.Text = "Staged Changes";
             // 
             // CommitDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(668, 401);
+            this.Controls.Add(this.lb_staged);
+            this.Controls.Add(this.chkList_StagedList);
             this.Controls.Add(this.btn_Commit);
             this.Controls.Add(this.btn_CommitPush);
             this.Controls.Add(this.txt_commitMessage);
             this.Controls.Add(this.label1);
             this.Name = "CommitDialog";
             this.Text = "Commit Dialog";
+            this.Load += new System.EventHandler(this.CommitDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -102,5 +125,7 @@ namespace InventIT.Git
         private System.Windows.Forms.TextBox txt_commitMessage;
         private System.Windows.Forms.Button btn_CommitPush;
         private System.Windows.Forms.Button btn_Commit;
+        private System.Windows.Forms.CheckedListBox chkList_StagedList;
+        private System.Windows.Forms.Label lb_staged;
     }
 }

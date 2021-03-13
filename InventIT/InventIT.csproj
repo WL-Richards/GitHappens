@@ -179,6 +179,12 @@
   <ItemGroup>
     <None Include="Resources\settings_large.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stage_large.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stage_small.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

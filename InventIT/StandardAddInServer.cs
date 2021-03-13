@@ -33,6 +33,7 @@ namespace InventIT
         // Buttons 
         private ButtonDefinition btn_Commit;
         private ButtonDefinition btn_Checkout;
+        private ButtonDefinition btn_Stage;
 
         private ButtonDefinition btn_LockFile;
 
@@ -114,7 +115,21 @@ namespace InventIT
         /// <param name="HandlingCode"></param>
         private void ApplicationEventsManager_OnSaveDocument(_Document DocumentObject, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            throw new NotImplementedException();
+            if (Git.LockFileManager.canEditFile(CurrentDocument))
+            {
+                if (Properties.Settings.Default.lockOnSave)
+                    Git.LockFileManager.lockFile(CurrentDocument, true);
+                HandlingCode = HandlingCodeEnum.kEventHandled;
+            }
+            else
+            {
+                if (BeforeOrAfter == EventTimingEnum.kBefore)
+                {
+                    MessageBox.Show("You Cannot Save this file as it is currently locked by another user", "Error");
+                    
+                }
+                HandlingCode = HandlingCodeEnum.kEventCanceled;
+            }
         }
 
         /// <summary>
@@ -152,6 +167,10 @@ namespace InventIT
             {
                 // Redundant in the local scope, useful in the global
                 CurrentDocument = FullDocumentName;
+                if (Properties.Settings.Default.lockOnOpen)
+                {
+                    Git.LockFileManager.lockFile(CurrentDocument, true);
+                }
 
                 if (Git.GitManager.inGitRepo(CurrentDocument))
                 {
@@ -229,6 +248,8 @@ namespace InventIT
             // Link the pull button to a functional handler
             btn_Checkout.OnExecute += M_checkoutButton_OnExecute;
 
+            btn_Stage = m_inventorApplication.CommandManager.ControlDefinitions.AddButtonDefinition("Stage\nCurrent File", "Autodesk:VCS:Stage", CommandTypesEnum.kFileOperationsCmdType, Guid.NewGuid().ToString(), "", "", IconManager.smallStagePicture, IconManager.largeStagePicture);
+            btn_Stage.OnExecute += Btn_Stage_OnExecute;
 
             #endregion
 
@@ -255,12 +276,23 @@ namespace InventIT
                 btn_Commit.Enabled = false;
                 btn_Checkout.Enabled = false;
                 btn_LockFile.Enabled = false;
+                btn_Stage.Enabled = false;
             }
 
             // Finally add all the buttons to the corresponding panels with large icons enabled
             panel_BasicGit.CommandControls.AddButton(btn_Commit, true);
             panel_BasicGit.CommandControls.AddButton(btn_Checkout, true);
+            panel_BasicGit.CommandControls.AddButton(btn_Stage, true);
             panel_FileManagement.CommandControls.AddButton(btn_LockFile, true);
+        }
+
+        /// <summary>
+        /// Called when ever the user wants to stage changes to a file
+        /// </summary>
+        /// <param name="Context"></param>
+        private void Btn_Stage_OnExecute(NameValueMap Context)
+        {
+            Properties.Settings.Default.stagedFiles.Add(CurrentDocument);
         }
 
         /// <summary>
@@ -280,11 +312,11 @@ namespace InventIT
         {
             if (Git.LockFileManager.isFileLocked(CurrentDocument))
             {
-                Git.LockFileManager.unlockFile(CurrentDocument);
+                Git.LockFileManager.unlockFile(CurrentDocument, false);
             }
             else
             {
-                Git.LockFileManager.lockFile(CurrentDocument);
+                Git.LockFileManager.lockFile(CurrentDocument, false);
             }
         }
 
@@ -304,6 +336,8 @@ namespace InventIT
         /// <param name="Context">Caller/Handler info</param>
         private void M_commitButton_OnExecute(NameValueMap Context)
         {
+            if (Properties.Settings.Default.stagedFiles.Count <= 0)
+                Properties.Settings.Default.stagedFiles.Add(CurrentDocument);
             Git.GitManager.openCommitDialog();
         }
 
@@ -337,6 +371,9 @@ namespace InventIT
 
                 btn_Checkout.Delete();
                 btn_Checkout.OnExecute -= M_checkoutButton_OnExecute;
+
+                btn_Stage.Delete();
+                btn_Stage.OnExecute -= Btn_Stage_OnExecute;
             }
 
             if (panel_FileManagement != null)

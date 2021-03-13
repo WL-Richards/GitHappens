@@ -23,5 +23,9 @@ namespace InventIT
         // Git Settings Icon
         public static IPictureDisp smallSettingsPicture = PictureConverter.ImageToPictureDisp(Resources.settings_small);
         public static IPictureDisp largeSettingsPicture = PictureConverter.ImageToPictureDisp(Resources.settings_large);
+
+        // Stage Commit Icon
+        public static IPictureDisp smallStagePicture = PictureConverter.ImageToPictureDisp(Resources.stage_small);
+        public static IPictureDisp largeStagePicture = PictureConverter.ImageToPictureDisp(Resources.stage_large);
     }
 }
