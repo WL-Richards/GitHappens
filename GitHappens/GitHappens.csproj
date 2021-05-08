@@ -98,6 +98,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddIn Assistant\AddInSetup.cs" />
+    <Compile Include="AddIn Assistant\ApplicationManager.cs" />
+    <Compile Include="AddIn Assistant\EnvironmentManager.cs" />
+    <Compile Include="AddIn Assistant\Item Panels\FileManagementPanel.cs" />
+    <Compile Include="AddIn Assistant\Item Panels\GitPanel.cs" />
+    <Compile Include="AddIn Assistant\Item Panels\SettingsPanel.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -134,7 +140,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="AddIn Assistant\README.md" />
     <None Include="app.config" />
+    <None Include="Git Settings\README.md" />
+    <None Include="Git\README.md" />
     <None Include="InventIT.X.manifest" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +197,7 @@
   <ItemGroup>
     <None Include="Resources\stage_small.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

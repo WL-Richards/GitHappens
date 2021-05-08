@@ -101,8 +101,10 @@ namespace GitHappens.Git
         /// <returns>Status of tracking</returns>
         public static bool inGitRepo(string filePath)
         {
-            // Change the current project directory to the
-            Directory.SetCurrentDirectory(Directory.GetParent(filePath).FullName);
+            if (File.Exists(filePath)){
+                // Change the current project directory to the
+                Directory.SetCurrentDirectory(Directory.GetParent(filePath).FullName);
+            }
             
             // Run the status command to see if we are currently in a git repo
             return !runGitCommand("status").Contains("not a git repository");
