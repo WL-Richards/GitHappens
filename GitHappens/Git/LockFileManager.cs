@@ -16,6 +16,9 @@ namespace GitHappens.Git
     {
         /// <summary>
         /// Get an array representation of the current file permissions
+        /// 
+        /// Index 0 - Status of File lock
+        /// Index 1- Whether or not the current user can edit the file even if it is locked
         /// </summary>
         /// <param name="fileName">Name of the requested file</param>
         /// <returns>Array of 2 bools one for whether or not the file is exists in the lock file and one for if we can edit it</returns>
@@ -23,17 +26,23 @@ namespace GitHappens.Git
         {
             // File is locked and we cant edit it
             bool[] locked = { true, false };
+
+            // Check if the current file is in a git repository
             if (GitManager.inGitRepo(filePath))
             {
+                // Get the file path to the lock file
                 string lockFilePath = GitManager.getRepoRoot() + "/.git_lock.lck";
+
+                // Get the file path to the root of the repository converting forward slash delimiters into the Windows equivalent while escaping back slashes
                 string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
-                // Check if the lock file exists
+                // Check if the lock file exists, if not create it
                 if (!File.Exists(lockFilePath))
                 {
                     File.Create(lockFilePath);
                 }
 
+                // Read the lock file
                 string[] lines = File.ReadAllLines(lockFilePath);
 
                 // Check if the file is empty
@@ -50,7 +59,7 @@ namespace GitHappens.Git
                     // If the line contains the current file
                     if (line.Contains(filePath.Replace(topLevel, "").Trim()))
                     {
-                        // Check if our email is associated with that file, i
+                        // Next, Check if our email is associated with that file
                         if (line.Contains(GitManager.getUserEmail()))
                         {
                             // File is locked and file is editable by the user
@@ -65,6 +74,7 @@ namespace GitHappens.Git
                         }
 
                     }
+
                     // If the file is not found in that line set locked = false as if it is found it will be evaluated
                     else
                     {
@@ -78,11 +88,12 @@ namespace GitHappens.Git
 
             }
 
+            // Return the status of the file
             return locked;
         }
 
         /// <summary>
-        /// Checks if the file is able to be edited by us
+        /// Checks if the file is able to be edited by the current user
         /// </summary>
         /// <param name="filePath">Path to file</param>
         /// <returns>Status of our edit-ability</returns>
@@ -102,7 +113,7 @@ namespace GitHappens.Git
         }
 
         /// <summary>
-        /// Lock the passed file and push that change to the cloud
+        /// Lock the passed file locally within the lock file
         /// </summary>
         /// <param name="filePath">Path to locked file</param>
         private static void lockFileLocal(string filePath)
@@ -124,7 +135,7 @@ namespace GitHappens.Git
         }
 
         /// <summary>
-        /// Unlock the requested file
+        /// Unlock the requested file locally
         /// </summary>
         /// <param name="filePath"></param>
         private static void unlockFileLocal(string filePath)

@@ -65,15 +65,13 @@ namespace GitHappens.Settings
         /// <param name="e"></param>
         private void btn_Test_Click(object sender, EventArgs e)
         {
-
             if (!Properties.Settings.Default.gitPath.Equals("Not Found")) {
 
-                string output = GitManager.testGit();
-                if (output.Contains("git version"))
+               bool testResult = GitManager.testGit();
+               if(testResult)
                     MessageBox.Show("Git Successfully Setup.", "Success");
                 else
                     MessageBox.Show("Failed to reach Git.", "Error");
-                
             }
             else
             {

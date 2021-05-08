@@ -34,9 +34,9 @@ namespace GitHappens.Git
         /// </summary>
         /// <param name="gitPath">Path to the Git binary.</param>
         /// <returns>Process exit code</returns>
-        public static string testGit()
+        public static bool testGit()
         {
-            return runGitCommand("--verison").Trim();
+            return runGitCommand("--version").Trim().Contains("git version");
         }
 
         /// <summary>
@@ -48,6 +48,11 @@ namespace GitHappens.Git
             return runGitCommand("config user.email").Trim();
         }
 
+        /// <summary>
+        /// Sets the users email to the global email in Git
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public static string setUserEmail(string email)
         {
             return runGitCommand(String.Format("config --global user.email {0}", email)).Trim();
@@ -66,20 +71,25 @@ namespace GitHappens.Git
         /// </summary>
         public static string setupGit()
         {
+            // Set a variable 'gitExists' to the status of wether or not git existed at the default intsall path
             string gitExists = GitManager.gitExistsAtDefault();
 
-            // If there was a
+            // If the property was not already set set it
             if (Properties.Settings.Default.gitPath.Length <= 0)
             {
                 Properties.Settings.Default.gitPath = gitExists;
                 
             }
+
+            // However if has been set simply retrieve the value
             else
             {
                 gitExists = Properties.Settings.Default.gitPath;
             }
 
+            // Save property changes
             Properties.Settings.Default.Save();
+
             // Return the status of the Git binary
             return gitExists;
         }
@@ -93,9 +103,9 @@ namespace GitHappens.Git
         {
             // Change the current project directory to the
             Directory.SetCurrentDirectory(Directory.GetParent(filePath).FullName);
-            if (!runGitCommand("status").Contains("not a git repository"))
-                return true;
-            return false;
+            
+            // Run the status command to see if we are currently in a git repo
+            return !runGitCommand("status").Contains("not a git repository");
         }
 
         /// <summary>
@@ -226,7 +236,6 @@ namespace GitHappens.Git
             {
                 MessageBox.Show("Git was not present at the given file path (File Missing)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "Git Not Present";
-
             }
         }
 
