@@ -18,7 +18,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>InventIT</RootNamespace>
+    <RootNamespace>GitHappens</RootNamespace>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -77,6 +77,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>GitHappens</AssemblyName>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Inventor.Interop, Version=25.0.0.0, Culture=neutral, PublicKeyToken=d84147f8b4276564, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -120,10 +123,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Settings\GitSettings.cs">
+    <Compile Include="Git Settings\GitSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings\GitSettings.Designer.cs">
+    <Compile Include="Git Settings\GitSettings.Designer.cs">
       <DependentUpon>GitSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="StandardAddInServer.cs">
@@ -147,7 +150,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Settings\GitSettings.resx">
+    <EmbeddedResource Include="Git Settings\GitSettings.resx">
       <DependentUpon>GitSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace InventIT.Git
+namespace GitHappens.Git
 {
     /// <summary>
     /// Handles all process interaction with Git
@@ -110,9 +110,11 @@ namespace InventIT.Git
         /// Push content to the cloud
         /// </summary>
         /// <returns></returns>
-        public static string pushFiles()
+        public static void pushFiles()
         {
-            return "";
+            // Update the files before push
+            updateFiles();
+            MessageBox.Show(runGitCommand("push"));
         }
 
         /// <summary>
@@ -124,9 +126,9 @@ namespace InventIT.Git
             {
                 new Thread(new ThreadStart(() =>
                 {
-                    runGitCommand("fetch");
-                    runGitCommand("restore .");
-                    runGitCommand("pull -X theirs");
+                    MessageBox.Show(runGitCommand("fetch"));
+                    MessageBox.Show(runGitCommand("restore ."));
+                    MessageBox.Show(runGitCommand("pull"));
                 }));
             }
         }

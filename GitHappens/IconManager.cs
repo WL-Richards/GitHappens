@@ -1,6 +1,6 @@
-﻿using InventIT.Properties;
+﻿using GitHappens.Properties;
 using stdole;
-namespace InventIT
+namespace GitHappens
 {
 
     /// <summary>

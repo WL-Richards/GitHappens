@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace InventIT
+namespace GitHappens
 {
     public class PictureConverter : AxHost
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace InventIT.Properties {
+namespace GitHappens.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

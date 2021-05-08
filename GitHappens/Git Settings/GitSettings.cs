@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using InventIT.Git;
+using GitHappens.Git;
 using System.Diagnostics;
 
-namespace InventIT.Settings
+namespace GitHappens.Settings
 {
     public partial class GitSettings : Form
     {

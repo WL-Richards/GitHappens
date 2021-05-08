@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("InventIT")]
-[assembly: AssemblyDescription("InventIT")]
+[assembly: AssemblyTitle("GitHappens")]
+[assembly: AssemblyDescription("Inventor Version Control Utilizing Git and LFS")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Autodesk, Inc.")]
 [assembly: AssemblyProduct("Autodesk Inventor")]

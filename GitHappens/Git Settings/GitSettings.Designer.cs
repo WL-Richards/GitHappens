@@ -1,5 +1,5 @@
 ﻿
-namespace InventIT.Settings
+namespace GitHappens.Settings
 {
     partial class GitSettings
     {

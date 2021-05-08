@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace InventIT.Git
+namespace GitHappens.Git
 {
     public partial class CommitDialog : Form
     {
@@ -17,6 +17,11 @@ namespace InventIT.Git
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Get the list of staged changes on load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CommitDialog_Load(object sender, EventArgs e)
         {
             string repoRoot = "";
@@ -31,6 +36,11 @@ namespace InventIT.Git
             }
         }
 
+        /// <summary>
+        /// Commits the staged changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_Commit_Click(object sender, EventArgs e)
         {
             foreach (int index in chkList_StagedList.CheckedIndices)
@@ -54,6 +64,30 @@ namespace InventIT.Git
             Properties.Settings.Default.stagedFiles.Clear();
 
             this.Close();
+        }
+
+        private void btn_CommitPush_Click(object sender, EventArgs e)
+        {
+            foreach (int index in chkList_StagedList.CheckedIndices)
+            {
+                if (chkList_StagedList.GetItemCheckState(index) == CheckState.Checked)
+                {
+                    GitManager.stageFile(Properties.Settings.Default.stagedFiles[index]);
+                }
+            }
+
+            if (GitManager.commitStaged(txt_commitMessage.Text).Contains("branch is up to date"))
+            {
+                MessageBox.Show("No Changes To Commit", "Information");
+            }
+            else
+            {
+                GitManager.pushFiles();
+               
+            }
+
+            // Clear all staged changes after commit
+            Properties.Settings.Default.stagedFiles.Clear();
         }
     }
 }

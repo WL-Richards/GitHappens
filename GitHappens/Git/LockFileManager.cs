@@ -7,7 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace InventIT.Git
+namespace GitHappens.Git
 {
     /// <summary>
     /// Manages the Git lockfile

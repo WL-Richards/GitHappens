@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace InventIT
+namespace GitHappens
 {
     /// <summary>
     /// This is the primary AddIn Server class that implements the ApplicationAddInServer interface

@@ -1,5 +1,5 @@
 ﻿
-namespace InventIT.Git
+namespace GitHappens.Git
 {
     partial class CommitDialog
     {
@@ -50,8 +50,8 @@ namespace InventIT.Git
             // 
             this.txt_commitMessage.AcceptsReturn = true;
             this.txt_commitMessage.AcceptsTab = true;
-            this.txt_commitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.txt_commitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_commitMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txt_commitMessage.Location = new System.Drawing.Point(13, 30);
@@ -70,6 +70,7 @@ namespace InventIT.Git
             this.btn_CommitPush.Text = "Commit & Push";
             this.btn_CommitPush.UseMnemonic = false;
             this.btn_CommitPush.UseVisualStyleBackColor = false;
+            this.btn_CommitPush.Click += new System.EventHandler(this.btn_CommitPush_Click);
             // 
             // btn_Commit
             // 
