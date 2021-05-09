@@ -118,9 +118,9 @@ namespace GitHappens.Settings
             this.chk_lockFileOnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chk_lockFileOnSave.Location = new System.Drawing.Point(291, 62);
             this.chk_lockFileOnSave.Name = "chk_lockFileOnSave";
-            this.chk_lockFileOnSave.Size = new System.Drawing.Size(159, 24);
+            this.chk_lockFileOnSave.Size = new System.Drawing.Size(156, 24);
             this.chk_lockFileOnSave.TabIndex = 7;
-            this.chk_lockFileOnSave.Text = "Lock File On Open";
+            this.chk_lockFileOnSave.Text = "Lock File On Save";
             this.chk_lockFileOnSave.UseVisualStyleBackColor = true;
             this.chk_lockFileOnSave.CheckedChanged += new System.EventHandler(this.chk_lockFileOnSave_CheckedChanged);
             // 

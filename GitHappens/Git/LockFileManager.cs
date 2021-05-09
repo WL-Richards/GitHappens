@@ -56,6 +56,7 @@ namespace GitHappens.Git
                 // Loop through each line in the lock file
                 foreach (string line in lines)
                 {
+                    
                     // If the line contains the current file
                     if (line.Contains(filePath.Replace(topLevel, "").Trim()))
                     {
@@ -73,6 +74,8 @@ namespace GitHappens.Git
                             locked[1] = false;
                         }
 
+                        // Return the status of the file
+                        return locked;
                     }
 
                     // If the file is not found in that line set locked = false as if it is found it will be evaluated
@@ -84,12 +87,12 @@ namespace GitHappens.Git
                     }
                 }
 
-
-
+                
             }
-
             // Return the status of the file
             return locked;
+
+
         }
 
         /// <summary>

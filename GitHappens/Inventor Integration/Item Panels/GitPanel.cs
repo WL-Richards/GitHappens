@@ -1,9 +1,11 @@
-﻿using Inventor;
+﻿using GitHappens.Git;
+using Inventor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GitHappens.AddIn_Assistant.Item_Panels
 {
@@ -76,7 +78,10 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// <param name="Context"></param>
         private static void onStageFile(NameValueMap Context)
         {
-            Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
+            if (GitManager.canCommit(EnvironmentManager.getCurrrentDocument()))
+                Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
+            else
+                MessageBox.Show("The selected file has no pending change and will not be committed", "Information");
         }
 
         /// <summary>
@@ -95,9 +100,14 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// <param name="Context">Caller/Handler info</param>
         private static void onCommit(NameValueMap Context)
         {
-            if (Properties.Settings.Default.stagedFiles.Count <= 0)
-                Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
-            Git.GitManager.openCommitDialog();
+            if (GitManager.canCommit(EnvironmentManager.getCurrrentDocument()))
+            {
+                if (Properties.Settings.Default.stagedFiles.Count <= 0)
+                    Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
+                GitManager.openCommitDialog();
+            }
+            else
+                MessageBox.Show("The selected file has no pending change and will not be committed", "Information");
         }
     
         /// <summary>

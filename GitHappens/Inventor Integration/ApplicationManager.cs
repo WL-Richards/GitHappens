@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GitHappens.AddIn_Assistant
 {
@@ -25,9 +26,19 @@ namespace GitHappens.AddIn_Assistant
         /// <param name="HandlingCode">How the event was handled</param>
         public static void onDocumentSave(_Document DocumentObject, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
+            // Check before we save if the file has been saved before
+            bool firstTimeSave = false;
+            if (BeforeOrAfter == EventTimingEnum.kBefore)
+            {
+                // If the file exists or not determines if this is a first time save
+                firstTimeSave = !System.IO.File.Exists(DocumentObject.File.FullFileName);
+            }
+                
+            // Check if our current lock status allows us to edit the file
             if (Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
             {
-                if (Properties.Settings.Default.lockOnSave)
+                // If it is a first time save don't lock the file as it doesn't exist for anyone else
+                if (Properties.Settings.Default.lockOnSave && !firstTimeSave)
                     Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), true);
                 HandlingCode = HandlingCodeEnum.kEventHandled;
             }
@@ -37,7 +48,6 @@ namespace GitHappens.AddIn_Assistant
                 if (BeforeOrAfter == EventTimingEnum.kBefore)
                 {
                     MessageBox.Show("You Cannot Save this file as it is currently locked by another user", "Error");
-
                 }
                 HandlingCode = HandlingCodeEnum.kEventCanceled;
             }
@@ -53,9 +63,12 @@ namespace GitHappens.AddIn_Assistant
         /// <param name="HandlingCode"></param>
         public static void onDocumentOpen(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
+            // Redundant in the local scope, useful in the global
+            EnvironmentManager.setCurrrentDocument(FullDocumentName);
             if (BeforeOrAfter == EventTimingEnum.kAfter)
             {
-                if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()) && !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
+                if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()) && 
+                    !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
                 {
 
                     // If the file is locked inform them that no changes will be saved to this file if they say the dont want to continue close the object
@@ -65,12 +78,14 @@ namespace GitHappens.AddIn_Assistant
                     }
                     else
                     {
+                        // Clear and create a new UI for the different environment
                         EnvironmentManager.cleanUpUI();
                         EnvironmentManager.createUserInterface(AddInSetup.getUIManager(), Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()));
                     }
                 }
                 else
                 {
+                    // Clear and create a new UI for the different environment
                     EnvironmentManager.cleanUpUI();
                     EnvironmentManager.createUserInterface(AddInSetup.getUIManager(), Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()));
                 }
@@ -78,8 +93,7 @@ namespace GitHappens.AddIn_Assistant
             }
             else if (BeforeOrAfter == EventTimingEnum.kBefore)
             {
-                // Redundant in the local scope, useful in the global
-                EnvironmentManager.setCurrrentDocument(FullDocumentName);
+                
                 if (Properties.Settings.Default.lockOnOpen)
                 {
                     Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), true);

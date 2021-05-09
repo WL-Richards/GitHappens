@@ -111,6 +111,16 @@ namespace GitHappens.Git
         }
 
         /// <summary>
+        /// Check to see if any changes have been made to the point where it is worth committing the file
+        /// </summary>
+        /// <param name="filePath">File to check</param>
+        /// <returns>If we can commit the current file</returns>
+        public static bool canCommit(string filePath)
+        {
+            return !runGitCommand(String.Format("status {0}", filePath)).Trim().Contains("working tree clean");
+        }
+
+        /// <summary>
         /// Open the Commit / Push dialog
         /// </summary>
         public static void openCommitDialog()
@@ -121,12 +131,14 @@ namespace GitHappens.Git
         /// <summary>
         /// Push content to the cloud
         /// </summary>
-        /// <returns></returns>
-        public static void pushFiles()
+        /// <returns>The status of completion</returns>
+        public static string pushFiles()
         {
             // Update the files before push
             updateFiles();
-            MessageBox.Show(runGitCommand("push"));
+            string pushResult = runGitCommand("push");
+            return pushResult.Contains("fatal") ? String.Format("Failed to push: {0}", pushResult) : "Push Successful";
+           
         }
 
         /// <summary>
@@ -179,7 +191,7 @@ namespace GitHappens.Git
         /// <param name="filePath"></param>
         public static void stageFile(string filePath)
         {
-            MessageBox.Show(runGitCommand(String.Format("add {0}", filePath)));
+            runGitCommand(String.Format("add {0}", filePath));
         }
 
         /// <summary>

@@ -25,9 +25,11 @@ namespace GitHappens.Git
         private void CommitDialog_Load(object sender, EventArgs e)
         {
             string repoRoot = "";
+            
             // Add all staged changes to the staged stages box
             foreach(string item in Properties.Settings.Default.stagedFiles)
             {
+                MessageBox.Show(item);
                 if (GitManager.inGitRepo(item) && repoRoot.Length <= 0)
                 {
                     repoRoot = GitManager.getRepoRoot().Replace("/", "\\"); ;
@@ -62,14 +64,16 @@ namespace GitHappens.Git
 
             // Clear all staged changes after commit
             Properties.Settings.Default.stagedFiles.Clear();
-
+            Properties.Settings.Default.Save();
             this.Close();
         }
 
         private void btn_CommitPush_Click(object sender, EventArgs e)
         {
+            // Loop through the items indices in the staged list
             foreach (int index in chkList_StagedList.CheckedIndices)
             {
+                // Check if it is staged for commit
                 if (chkList_StagedList.GetItemCheckState(index) == CheckState.Checked)
                 {
                     GitManager.stageFile(Properties.Settings.Default.stagedFiles[index]);
@@ -82,12 +86,13 @@ namespace GitHappens.Git
             }
             else
             {
-                GitManager.pushFiles();
-               
+                MessageBox.Show(GitManager.pushFiles(), "Information");
             }
 
             // Clear all staged changes after commit
             Properties.Settings.Default.stagedFiles.Clear();
+            Properties.Settings.Default.Save();
+            this.Close();
         }
     }
 }

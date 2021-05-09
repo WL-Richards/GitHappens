@@ -98,12 +98,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddIn Assistant\AddInSetup.cs" />
-    <Compile Include="AddIn Assistant\ApplicationManager.cs" />
-    <Compile Include="AddIn Assistant\EnvironmentManager.cs" />
-    <Compile Include="AddIn Assistant\Item Panels\FileManagementPanel.cs" />
-    <Compile Include="AddIn Assistant\Item Panels\GitPanel.cs" />
-    <Compile Include="AddIn Assistant\Item Panels\SettingsPanel.cs" />
+    <Compile Include="Inventor Integration\AddInSetup.cs" />
+    <Compile Include="Inventor Integration\ApplicationManager.cs" />
+    <Compile Include="Inventor Integration\EnvironmentManager.cs" />
+    <Compile Include="Inventor Integration\Item Panels\FileManagementPanel.cs" />
+    <Compile Include="Inventor Integration\Item Panels\GitPanel.cs" />
+    <Compile Include="Inventor Integration\Item Panels\SettingsPanel.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -115,8 +115,8 @@
     </Compile>
     <Compile Include="Git\GitManager.cs" />
     <Compile Include="Git\LockFileManager.cs" />
-    <Compile Include="IconManager.cs" />
-    <Compile Include="PictureConverter.cs">
+    <Compile Include="Icon Management\IconManager.cs" />
+    <Compile Include="Icon Management\PictureConverter.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -140,10 +140,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AddIn Assistant\README.md" />
+    <None Include="Inventor Integration\README.md" />
     <None Include="app.config" />
     <None Include="Git Settings\README.md" />
     <None Include="Git\README.md" />
+    <None Include="Icon Management\README.md" />
     <None Include="InventIT.X.manifest" />
   </ItemGroup>
   <ItemGroup>
