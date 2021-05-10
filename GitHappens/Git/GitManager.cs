@@ -51,7 +51,7 @@ namespace GitHappens.Git
         /// <summary>
         /// Sets the users email to the global email in Git
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="email">Email to change the git settings to</param>
         /// <returns></returns>
         public static string setUserEmail(string email)
         {
@@ -61,7 +61,7 @@ namespace GitHappens.Git
         /// <summary>
         /// Get the top level of the current Git repo
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String pointing to the top level of the current Git repo</returns>
         public static string getRepoRoot()
         {
            return runGitCommand("rev-parse --show-toplevel").Trim();

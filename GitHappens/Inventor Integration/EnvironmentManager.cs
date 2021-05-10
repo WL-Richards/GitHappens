@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GitHappens.AddIn_Assistant.Item_Panels;
+using GitHappens.Inventor_Integration.Item_Panels;
 using System.Windows.Forms;
 
-namespace GitHappens.AddIn_Assistant
+namespace GitHappens.Inventor_Integration
 {
     /// <summary>
     /// Created for the purpose of managing information related to the current inventor environment from a single easy to reference point
@@ -17,8 +17,7 @@ namespace GitHappens.AddIn_Assistant
         // Points of reference for the currently open document and environment
         private static string CurrentDocument = "";
         private static string CurrentEnvironment = "";
-
-        private static RibbonTab versionControlTab;
+   
 
         /// <summary>
         /// Handles Changing of Environments in Inventor 
@@ -49,7 +48,6 @@ namespace GitHappens.AddIn_Assistant
                     setCurrentEnvironment("Part");
                 }
 
-                EnvironmentManager.cleanUpUI();
                 createUserInterface(AddInSetup.getUIManager(), false);
                 
 
@@ -72,17 +70,8 @@ namespace GitHappens.AddIn_Assistant
         /// <param name="uiManger"></param>
         public static void createUserInterface(UserInterfaceManager uiManger, bool inGitRepo)
         {
-            // Create the version control tab for the current environment
-            versionControlTab = uiManger.Ribbons[getCurrentEnvironment()].RibbonTabs.Add("Version Control", "Autodesk:VCS", Guid.NewGuid().ToString());
-
-            // Create the Git Panel 
-            GitPanel.createBasicGitPanel(versionControlTab, inGitRepo);
-
-            // Create the file management panel
-            FileManagementPanel.createFileManagementPanel(versionControlTab, inGitRepo);
-
-            // Create the git settings file
-            SettingsPanel.createSettingsPanel(versionControlTab);
+            // Create or restore the UI for the environment
+            UIManager.createUI(uiManger, inGitRepo);
         }
 
         /// <summary>
@@ -90,12 +79,7 @@ namespace GitHappens.AddIn_Assistant
         /// </summary>
         public static void cleanUpUI()
         {
-            GitPanel.Close();
-            FileManagementPanel.Close();
-            SettingsPanel.Close();
-
-            if (versionControlTab != null)
-                versionControlTab.Delete();
+           UIManager.Close();
         }
 
         /// <summary>

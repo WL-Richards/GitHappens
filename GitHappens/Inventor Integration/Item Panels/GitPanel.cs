@@ -7,28 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GitHappens.AddIn_Assistant.Item_Panels
+namespace GitHappens.Inventor_Integration.Item_Panels
 {
     class GitPanel
     {
         // Buttons 
-        private static ButtonDefinition btn_Commit;
-        private static ButtonDefinition btn_Checkout;
-        private static ButtonDefinition btn_Stage;
-        private static RibbonPanel basicGitPanel;
+        private ButtonDefinition btn_Commit;
+        private ButtonDefinition btn_Checkout;
+        private ButtonDefinition btn_Stage;
+        private RibbonPanel basicGitPanel;
 
         /// <summary>
         /// Create the basic Git control panel
         /// </summary>
         /// <param name="versionControlTab">Version control tab</param>
-        public static void createBasicGitPanel(RibbonTab versionControlTab, bool inGitRepo)
+        public void createBasicGitPanel(RibbonTab versionControlTab, bool inGitRepo, string envName)
         {
             // Add the basic git functionality
             basicGitPanel = versionControlTab.RibbonPanels.Add("Push & Pull", "Autodesk:VCS:Commit_Push", Guid.NewGuid().ToString());
 
             // Create the commit button and add a method for functionality
             btn_Commit = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Commit\nFile", 
-                "Autodesk:VCS:Commit", 
+                string.Format("Autodesk:VCS:Commit:{0}", envName), 
                 CommandTypesEnum.kFileOperationsCmdType, 
                 Guid.NewGuid().ToString(), "", "", 
                 IconManager.smallCommitPicture, 
@@ -39,7 +39,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
 
             // Create the checkout button and create a method for functionality.
             btn_Checkout = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Pull\nChanges",
-                "Autodesk:VCS:Checkout",
+                string.Format("Autodesk:VCS:Checkout{0}", envName),
                 CommandTypesEnum.kFileOperationsCmdType,
                 Guid.NewGuid().ToString(), "", "",
                 IconManager.smallCheckoutPicture,
@@ -48,7 +48,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
             btn_Checkout.OnExecute += onCheckout;
 
             btn_Stage = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Stage\nCurrent File",
-                "Autodesk:VCS:Stage",
+                string.Format("Autodesk:VCS:Stage{0}", envName),
                 CommandTypesEnum.kFileOperationsCmdType,
                 Guid.NewGuid().ToString(), "", "",
                 IconManager.smallStagePicture,
@@ -76,7 +76,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// Called when ever the user wants to stage changes to a file
         /// </summary>
         /// <param name="Context"></param>
-        private static void onStageFile(NameValueMap Context)
+        private void onStageFile(NameValueMap Context)
         {
             if (GitManager.canCommit(EnvironmentManager.getCurrrentDocument()))
                 Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
@@ -88,7 +88,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// When the checkout / pull button is pressed
         /// </summary>
         /// <param name="Context">Caller/Handler info</param>
-        private static void onCheckout(NameValueMap Context)
+        private void onCheckout(NameValueMap Context)
         {
             if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
                 Git.GitManager.updateFiles();
@@ -98,7 +98,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// When the commit button is pressed
         /// </summary>
         /// <param name="Context">Caller/Handler info</param>
-        private static void onCommit(NameValueMap Context)
+        private void onCommit(NameValueMap Context)
         {
             if (GitManager.canCommit(EnvironmentManager.getCurrrentDocument()))
             {
@@ -113,7 +113,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// <summary>
         /// Cleanup and remove all bindings for closure
         /// </summary>
-        public static void Close()
+        public void Close()
         {
             if(basicGitPanel != null)
             {

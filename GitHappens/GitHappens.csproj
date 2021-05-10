@@ -119,6 +119,8 @@
     <Compile Include="Icon Management\PictureConverter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Inventor Integration\RibbonTabContainer.cs" />
+    <Compile Include="Inventor Integration\UIManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,5 +1,5 @@
 using Inventor;
-using GitHappens.AddIn_Assistant;
+using GitHappens.Inventor_Integration;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -47,7 +47,7 @@ namespace GitHappens
             if (firstTime)
             {
                 // Setup UI
-                AddIn_Assistant.AddInSetup.setupUIManagers();
+                AddInSetup.setupUIManagers();
             }
 
         }
@@ -58,7 +58,7 @@ namespace GitHappens
         public void Deactivate()
         {
             // Clean up non-null objects
-            AddIn_Assistant.EnvironmentManager.cleanUpUI();
+            Inventor_Integration.EnvironmentManager.cleanUpUI();
 
             // Release objects.
             m_inventorApplication = null;

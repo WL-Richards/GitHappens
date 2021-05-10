@@ -5,20 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GitHappens.AddIn_Assistant.Item_Panels
+namespace GitHappens.Inventor_Integration.Item_Panels
 {
     class SettingsPanel
     {
         // Settings
-        private static ButtonDefinition btn_GitSettings;
-        private static RibbonPanel settingsPanel;
+        private ButtonDefinition btn_GitSettings;
+        private RibbonPanel settingsPanel;
 
-        public static void createSettingsPanel(RibbonTab versionControlTab)
+        public void createSettingsPanel(RibbonTab versionControlTab, string envName)
         {
             settingsPanel = versionControlTab.RibbonPanels.Add("Git Settings", "Autodesk:VCS:Settings", Guid.NewGuid().ToString());
 
-            btn_GitSettings = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Settings", 
-                "Autodesk:VCS:SettingsButton", 
+            btn_GitSettings = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Settings",
+                string.Format("Autodesk:VCS:SettingsButton:{0}", envName), 
                 CommandTypesEnum.kNonShapeEditCmdType, 
                 Guid.NewGuid().ToString(), "", "", 
                 IconManager.smallSettingsPicture, 
@@ -29,7 +29,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
             settingsPanel.CommandControls.AddButton(btn_GitSettings, true);
         }
 
-        private static void onOpenGitSettings(NameValueMap Context)
+        private void onOpenGitSettings(NameValueMap Context)
         {
             new Settings.GitSettings().Show();
         }
@@ -37,7 +37,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// <summary>
         /// Cleanup and remove all bindings for closure
         /// </summary>
-        public static void Close()
+        public void Close()
         {
             if(settingsPanel != null)
             {

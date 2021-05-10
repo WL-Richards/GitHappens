@@ -3,7 +3,7 @@
   <ClassId>{fecf1836-db82-4457-bf2f-5298f719cba9}</ClassId>
   <ClientId>{fecf1836-db82-4457-bf2f-5298f719cba9}</ClientId>
   <DisplayName>GitHappens</DisplayName>
-  <Description>GitHappens</Description>
+  <Description>Git based version control system for CAD</Description>
   <Assembly>GitHappens.dll</Assembly>
   <LoadOnStartUp>1</LoadOnStartUp>
   <UserUnloadable>1</UserUnloadable>

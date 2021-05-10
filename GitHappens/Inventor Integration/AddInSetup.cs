@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GitHappens.AddIn_Assistant
+namespace GitHappens.Inventor_Integration
 {
     /// <summary>
     /// Handles mostly misc. functions that could easily be moved to their own file to improve readability.

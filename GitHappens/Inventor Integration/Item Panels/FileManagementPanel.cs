@@ -5,25 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GitHappens.AddIn_Assistant.Item_Panels
+namespace GitHappens.Inventor_Integration.Item_Panels
 {
     class FileManagementPanel
     {
-        private static ButtonDefinition btn_LockFile;
-        private static RibbonPanel fileManagementPanel;
-
+        private ButtonDefinition btn_LockFile;
+        private RibbonPanel fileManagementPanel;
 
         /// <summary>
         /// Create the file management panel (eg. lock files, etc.)
         /// </summary>
         /// <param name="versionControlTab">Parent version control tab</param>
-        public static void createFileManagementPanel(RibbonTab versionControlTab, bool inGitRepo)
+        public void createFileManagementPanel(RibbonTab versionControlTab, bool inGitRepo, string envName)
         {
             fileManagementPanel = versionControlTab.RibbonPanels.Add("File Management", "Autodesk:VCS:Edit_Manager", Guid.NewGuid().ToString());
 
             // Create the button to lock files
             btn_LockFile = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Toggle File\nLock", 
-                "Autodesk:VCS:LockFile", 
+                string.Format("Autodesk:VCS:LockFile:{0}", envName), 
                 CommandTypesEnum.kFilePropertyEditCmdType, 
                 Guid.NewGuid().ToString(), "", "", 
                 IconManager.smallLockFilePicture, 
@@ -44,7 +43,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// Manually Toggle the file lock
         /// </summary>
         /// <param name="Context"></param>
-        private static void onLockFile(NameValueMap Context)
+        private void onLockFile(NameValueMap Context)
         {
             if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()))
             {
@@ -59,7 +58,7 @@ namespace GitHappens.AddIn_Assistant.Item_Panels
         /// <summary>
         /// Cleanup and remove all bindings for closure
         /// </summary>
-        public static void Close()
+        public void Close()
         {
             if(fileManagementPanel != null)
             {

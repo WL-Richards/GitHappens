@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace GitHappens.AddIn_Assistant
+namespace GitHappens.Inventor_Integration
 {
     /// <summary>
     /// Manages Application events
@@ -79,14 +79,12 @@ namespace GitHappens.AddIn_Assistant
                     else
                     {
                         // Clear and create a new UI for the different environment
-                        EnvironmentManager.cleanUpUI();
                         EnvironmentManager.createUserInterface(AddInSetup.getUIManager(), Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()));
                     }
                 }
                 else
                 {
                     // Clear and create a new UI for the different environment
-                    EnvironmentManager.cleanUpUI();
                     EnvironmentManager.createUserInterface(AddInSetup.getUIManager(), Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()));
                 }
 
