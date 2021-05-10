@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GitHappens.Inventor_Integration
+namespace GitHappens.Inventor_Integration.UI_Management
 {
 
     /// <summary>
@@ -30,17 +30,34 @@ namespace GitHappens.Inventor_Integration
         /// Create the UI be that restore a previously generated one or create a new instance
         /// </summary>
         /// <param name="uiManger"></param>
-        public static void createUI(UserInterfaceManager uiManger, bool inGitRepo)
+        public static void createUI(UserInterfaceManager uiManger)
         {
             // If this is our first time creating the UI
             if (!previouslyCreatedUI(EnvironmentManager.getCurrentEnvironment()))
             {
                 // Create a new container for the RibbonTab
                 environmentRibbons.Add(EnvironmentManager.getCurrentEnvironment(), new RibbonTabContainer(EnvironmentManager.getCurrentEnvironment(), uiManger));
-
+                
             }
-            MessageBox.Show(environmentRibbons.Count.ToString());
+
+            setupButtons();
+
         }
+
+        /// <summary>
+        /// Alters the state of the buttons depending on if we are in a Git repo
+        /// </summary>
+        private static void setupButtons()
+        {
+            if (!Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
+            {
+               
+                environmentRibbons[EnvironmentManager.getCurrentEnvironment()].disableButtons();
+            }
+            else
+                environmentRibbons[EnvironmentManager.getCurrentEnvironment()].enableButtons();
+        }
+
         /// <summary>
         /// Cleanup all RibbonTabs
         /// </summary>

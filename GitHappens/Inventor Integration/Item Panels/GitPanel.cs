@@ -21,7 +21,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// Create the basic Git control panel
         /// </summary>
         /// <param name="versionControlTab">Version control tab</param>
-        public void createBasicGitPanel(RibbonTab versionControlTab, bool inGitRepo, string envName)
+        public void createBasicGitPanel(RibbonTab versionControlTab, string envName)
         {
             // Add the basic git functionality
             basicGitPanel = versionControlTab.RibbonPanels.Add("Push & Pull", "Autodesk:VCS:Commit_Push", Guid.NewGuid().ToString());
@@ -56,20 +56,31 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
             btn_Stage.OnExecute += onStageFile;
 
-            // If we are not in a Git repo then disable all Git controls
-            if (!inGitRepo)
-            {
-                btn_Commit.Enabled = false;
-                btn_Checkout.Enabled = false;
-                btn_Stage.Enabled = false;
-            }
-
-
             // Add all buttons to the panel
             basicGitPanel.CommandControls.AddButton(btn_Commit, true);
             basicGitPanel.CommandControls.AddButton(btn_Checkout, true);
             basicGitPanel.CommandControls.AddButton(btn_Stage, true);
 
+        }
+
+        /// <summary>
+        /// Disable buttons
+        /// </summary>
+        public void disableButtons()
+        {
+            btn_Commit.Enabled = false;
+            btn_Checkout.Enabled = false;
+            btn_Stage.Enabled = false;
+        }
+
+        /// <summary>
+        /// Enable buttons
+        /// </summary>
+        public void enableButtons()
+        {
+            btn_Commit.Enabled = true;
+            btn_Checkout.Enabled = true;
+            btn_Stage.Enabled = true;
         }
 
         /// <summary>

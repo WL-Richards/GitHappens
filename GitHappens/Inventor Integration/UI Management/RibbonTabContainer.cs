@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GitHappens.Inventor_Integration
+namespace GitHappens.Inventor_Integration.UI_Management
 {
     /// <summary>
     /// Object to contain the RibbonTab itself and it's corresponding panels
@@ -41,8 +41,8 @@ namespace GitHappens.Inventor_Integration
 
             // Create all the panels
             // NOTE: FADE OUT THE inGitRepo param
-            gitPanel.createBasicGitPanel(versionControlTab, true, environmentName);
-            fileManagementPanel.createFileManagementPanel(versionControlTab, true, environmentName);
+            gitPanel.createBasicGitPanel(versionControlTab,  environmentName);
+            fileManagementPanel.createFileManagementPanel(versionControlTab, environmentName);
             settingsPanel.createSettingsPanel(versionControlTab, environmentName);
         }
 
@@ -55,6 +55,18 @@ namespace GitHappens.Inventor_Integration
             settingsPanel.Close();
             fileManagementPanel.Close();
             versionControlTab.Delete();
+        }
+
+        public void disableButtons()
+        {
+            gitPanel.disableButtons();
+            fileManagementPanel.disableButtons();
+        }
+
+        public void enableButtons()
+        {
+            gitPanel.enableButtons();
+            fileManagementPanel.enableButtons();
         }
     }
 }

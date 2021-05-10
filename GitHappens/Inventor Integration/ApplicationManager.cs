@@ -63,42 +63,37 @@ namespace GitHappens.Inventor_Integration
         /// <param name="HandlingCode"></param>
         public static void onDocumentOpen(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            // Redundant in the local scope, useful in the global
-            EnvironmentManager.setCurrrentDocument(FullDocumentName);
+            
             if (BeforeOrAfter == EventTimingEnum.kAfter)
             {
-                if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()) && 
-                    !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
+                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
                 {
+                    if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()) &&
+                        !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
+                    {
 
-                    // If the file is locked inform them that no changes will be saved to this file if they say the dont want to continue close the object
-                    if (MessageBox.Show("This file is currently locked by another user. Any changes made to this WILL NOT BE SAVED! Do you want to Proceed", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                    {
-                        DocumentObject.Close();
-                    }
-                    else
-                    {
-                        // Clear and create a new UI for the different environment
-                        EnvironmentManager.createUserInterface(AddInSetup.getUIManager(), Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()));
+                        // If the file is locked inform them that no changes will be saved to this file if they say the dont want to continue close the object
+                        if (MessageBox.Show("This file is currently locked by another user. Any changes made to this WILL NOT BE SAVED! Do you want to Proceed", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            DocumentObject.Close();
+                        }
                     }
                 }
-                else
-                {
-                    // Clear and create a new UI for the different environment
-                    EnvironmentManager.createUserInterface(AddInSetup.getUIManager(), Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()));
-                }
 
+                // Clear and create a new UI for the different environment
+                EnvironmentManager.createUserInterface(AddInSetup.getUIManager());
             }
             else if (BeforeOrAfter == EventTimingEnum.kBefore)
             {
-                
-                if (Properties.Settings.Default.lockOnOpen)
-                {
-                    Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), true);
-                }
-
+                // Redundant in the local scope, useful in the global
+                EnvironmentManager.setCurrrentDocument(FullDocumentName);
                 if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
                 {
+                    if (Properties.Settings.Default.lockOnOpen)
+                    {
+                        Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), true);
+                    }
+
                     // Update the lock file
                     Git.GitManager.updateLockFile();
                 }

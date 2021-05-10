@@ -16,7 +16,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// Create the file management panel (eg. lock files, etc.)
         /// </summary>
         /// <param name="versionControlTab">Parent version control tab</param>
-        public void createFileManagementPanel(RibbonTab versionControlTab, bool inGitRepo, string envName)
+        public void createFileManagementPanel(RibbonTab versionControlTab,string envName)
         {
             fileManagementPanel = versionControlTab.RibbonPanels.Add("File Management", "Autodesk:VCS:Edit_Manager", Guid.NewGuid().ToString());
 
@@ -30,13 +30,18 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
             btn_LockFile.OnExecute += onLockFile;
 
-            if (!inGitRepo)
-            {
-                btn_LockFile.Enabled = false;
-            }
-
             // Add the lock file option to the UI
             fileManagementPanel.CommandControls.AddButton(btn_LockFile, true);
+        }
+
+        public void disableButtons()
+        {
+            btn_LockFile.Enabled = false;
+        }
+
+        public void enableButtons()
+        {
+            btn_LockFile.Enabled = true;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GitHappens.Inventor_Integration.Item_Panels;
 using System.Windows.Forms;
+using GitHappens.Inventor_Integration.UI_Management;
 
 namespace GitHappens.Inventor_Integration
 {
@@ -17,7 +18,6 @@ namespace GitHappens.Inventor_Integration
         // Points of reference for the currently open document and environment
         private static string CurrentDocument = "";
         private static string CurrentEnvironment = "";
-   
 
         /// <summary>
         /// Handles Changing of Environments in Inventor 
@@ -34,23 +34,15 @@ namespace GitHappens.Inventor_Integration
             {
 
                 // Set the CurrentEnvironment variable so this code is only run once per change
-
                 setCurrentEnvironment(Environment.DisplayName);
 
-                // Convert the Environment name "Inventor" to ZeroDoc as that is its internal name
-                if (getCurrentEnvironment().Equals("Inventor"))
-                {
-                    setCurrentEnvironment("ZeroDoc");
-                }
+                // Convert the Environment name to its API name
+                if (getCurrentEnvironment().Equals("Inventor")) {setCurrentEnvironment("ZeroDoc");}
+                if (getCurrentEnvironment().Equals("2D Sketch")) {setCurrentEnvironment("Part");}
 
-                if(getCurrentEnvironment().Equals("2D Sketch"))
-                {
-                    setCurrentEnvironment("Part");
-                }
-
-                createUserInterface(AddInSetup.getUIManager(), false);
+                // Create / Restore the environments interface
+                createUserInterface(AddInSetup.getUIManager());
                 
-
                 // Finally set the handling state of the handler
                 HandlingCode = HandlingCodeEnum.kEventHandled;
             }
@@ -68,10 +60,10 @@ namespace GitHappens.Inventor_Integration
         /// <param name="inGitRepo"></param>
         /// <param name="versionControlTab"></param>
         /// <param name="uiManger"></param>
-        public static void createUserInterface(UserInterfaceManager uiManger, bool inGitRepo)
+        public static void createUserInterface(UserInterfaceManager uiManger)
         {
             // Create or restore the UI for the environment
-            UIManager.createUI(uiManger, inGitRepo);
+            UIManager.createUI(uiManger);
         }
 
         /// <summary>

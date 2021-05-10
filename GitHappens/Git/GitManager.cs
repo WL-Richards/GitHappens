@@ -105,9 +105,9 @@ namespace GitHappens.Git
                 // Change the current project directory to the
                 Directory.SetCurrentDirectory(Directory.GetParent(filePath).FullName);
             }
-            
+
             // Run the status command to see if we are currently in a git repo
-            return !runGitCommand("status").Contains("not a git repository");
+            return !runGitCommand("status").Contains("not a git repository") && filePath.Length > 0;
         }
 
         /// <summary>
