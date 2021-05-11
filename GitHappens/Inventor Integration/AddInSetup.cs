@@ -65,10 +65,14 @@ namespace GitHappens.Inventor_Integration
             ApplicationEventsManager = application.ApplicationEvents;
             ApplicationEventsManager.OnOpenDocument += ApplicationManager.onDocumentOpen;
             ApplicationEventsManager.OnSaveDocument += ApplicationManager.onDocumentSave;
+            
+           
 
             // Get the applications UI manager
             UIManger = application.UserInterfaceManager;
         }
+
+        
 
         public static UserInterfaceManager getUIManager()
         {

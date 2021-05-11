@@ -49,7 +49,7 @@ namespace GitHappens.Inventor_Integration.UI_Management
         /// </summary>
         private static void setupButtons()
         {
-            if (!Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
+            if (!Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
             {
                
                 environmentRibbons[EnvironmentManager.getCurrentEnvironment()].disableButtons();

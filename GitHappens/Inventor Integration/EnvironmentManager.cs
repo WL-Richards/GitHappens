@@ -15,8 +15,6 @@ namespace GitHappens.Inventor_Integration
     /// </summary>
     class EnvironmentManager
     {
-        // Points of reference for the currently open document and environment
-        private static string CurrentDocument = "";
         private static string CurrentEnvironment = "";
 
         /// <summary>
@@ -78,9 +76,18 @@ namespace GitHappens.Inventor_Integration
         /// Getter for the current document
         /// </summary>
         /// <returns>Current Document's name</returns>
-        public static string getCurrrentDocument()
+        public static string getCurrentDocument()
         {
-            return CurrentDocument;
+            string documentName = "";
+
+            // Verify the ActiveDocument actually exists
+            if (ApplicationManager.getInventorApplication().ActiveDocument != null)
+            {
+                documentName = ApplicationManager.getInventorApplication().ActiveDocument.FullDocumentName;
+            }
+           
+            return documentName;
+
         }
 
         /// <summary>
@@ -90,15 +97,6 @@ namespace GitHappens.Inventor_Integration
         public static string getCurrentEnvironment()
         {
             return CurrentEnvironment;
-        }
-        
-        /// <summary>
-        /// Sets the current document name to track the value globally
-        /// </summary>
-        /// <param name="currentDocument">New document name</param>
-        public static void setCurrrentDocument(string currentDocument)
-        {
-            CurrentDocument = currentDocument;
         }
 
         /// <summary>

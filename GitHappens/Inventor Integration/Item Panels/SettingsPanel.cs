@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GitHappens.Inventor_Integration.Item_Panels
 {
@@ -31,6 +32,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
         private void onOpenGitSettings(NameValueMap Context)
         {
+            MessageBox.Show(EnvironmentManager.getCurrentDocument());
             new Settings.GitSettings().Show();
         }
 

@@ -35,11 +35,11 @@ namespace GitHappens.Inventor_Integration
             }
                 
             // Check if our current lock status allows us to edit the file
-            if (Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
+            if (Git.LockFileManager.canEditFile(EnvironmentManager.getCurrentDocument()))
             {
                 // If it is a first time save don't lock the file as it doesn't exist for anyone else
                 if (Properties.Settings.Default.lockOnSave && !firstTimeSave)
-                    Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), true);
+                    Git.LockFileManager.lockFile(EnvironmentManager.getCurrentDocument(), true);
                 HandlingCode = HandlingCodeEnum.kEventHandled;
             }
             else
@@ -66,10 +66,10 @@ namespace GitHappens.Inventor_Integration
             
             if (BeforeOrAfter == EventTimingEnum.kAfter)
             {
-                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
+                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
                 {
-                    if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()) &&
-                        !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrrentDocument()))
+                    if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrentDocument()) &&
+                        !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrentDocument()))
                     {
 
                         // If the file is locked inform them that no changes will be saved to this file if they say the dont want to continue close the object
@@ -85,13 +85,11 @@ namespace GitHappens.Inventor_Integration
             }
             else if (BeforeOrAfter == EventTimingEnum.kBefore)
             {
-                // Redundant in the local scope, useful in the global
-                EnvironmentManager.setCurrrentDocument(FullDocumentName);
-                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
+                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
                 {
                     if (Properties.Settings.Default.lockOnOpen)
                     {
-                        Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), true);
+                        Git.LockFileManager.lockFile(EnvironmentManager.getCurrentDocument(), true);
                     }
 
                     // Update the lock file
@@ -100,8 +98,12 @@ namespace GitHappens.Inventor_Integration
 
             }
             HandlingCode = HandlingCodeEnum.kEventHandled;
+
+            
         }
-    
+
+        
+
         /// <summary>
         /// Get the current inventor application object
         /// </summary>

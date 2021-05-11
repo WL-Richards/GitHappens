@@ -50,13 +50,13 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// <param name="Context"></param>
         private void onLockFile(NameValueMap Context)
         {
-            if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrrentDocument()))
+            if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrentDocument()))
             {
-                Git.LockFileManager.unlockFile(EnvironmentManager.getCurrrentDocument(), false);
+                Git.LockFileManager.unlockFile(EnvironmentManager.getCurrentDocument(), false);
             }
             else
             {
-                Git.LockFileManager.lockFile(EnvironmentManager.getCurrrentDocument(), false);
+                Git.LockFileManager.lockFile(EnvironmentManager.getCurrentDocument(), false);
             }
         }
 

@@ -89,8 +89,8 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// <param name="Context"></param>
         private void onStageFile(NameValueMap Context)
         {
-            if (GitManager.canCommit(EnvironmentManager.getCurrrentDocument()))
-                Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
+            if (GitManager.canCommit(EnvironmentManager.getCurrentDocument()))
+                Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrentDocument());
             else
                 MessageBox.Show("The selected file has no pending change and will not be committed", "Information");
         }
@@ -101,7 +101,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// <param name="Context">Caller/Handler info</param>
         private void onCheckout(NameValueMap Context)
         {
-            if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrrentDocument()))
+            if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
                 Git.GitManager.updateFiles();
         }
 
@@ -111,10 +111,10 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// <param name="Context">Caller/Handler info</param>
         private void onCommit(NameValueMap Context)
         {
-            if (GitManager.canCommit(EnvironmentManager.getCurrrentDocument()))
+            if (GitManager.canCommit(EnvironmentManager.getCurrentDocument()))
             {
                 if (Properties.Settings.Default.stagedFiles.Count <= 0)
-                    Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrrentDocument());
+                    Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrentDocument());
                 GitManager.openCommitDialog();
             }
             else
