@@ -33,7 +33,7 @@ namespace GitHappens.Inventor_Integration
                 // If the file exists or not determines if this is a first time save
                 firstTimeSave = !System.IO.File.Exists(DocumentObject.File.FullFileName);
             }
-                
+
             // Check if our current lock status allows us to edit the file
             if (Git.LockFileManager.canEditFile(EnvironmentManager.getCurrentDocument()))
             {
@@ -63,7 +63,7 @@ namespace GitHappens.Inventor_Integration
         /// <param name="HandlingCode"></param>
         public static void onDocumentOpen(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            
+
             if (BeforeOrAfter == EventTimingEnum.kAfter)
             {
                 if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
@@ -99,10 +99,22 @@ namespace GitHappens.Inventor_Integration
             }
             HandlingCode = HandlingCodeEnum.kEventHandled;
 
-            
+
         }
 
-        
+        /// <summary>
+        /// Called whenever a document is reactivated
+        /// </summary>
+        /// <param name="DocumentObject"></param>
+        /// <param name="BeforeOrAfter"></param>
+        /// <param name="Context"></param>
+        /// <param name="HandlingCode"></param>
+        public static void onChangeDocument(_Document DocumentObject, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
+        {
+            MessageBox.Show(DocumentObject.DisplayName);
+            HandlingCode = HandlingCodeEnum.kEventHandled;
+        }
+
 
         /// <summary>
         /// Get the current inventor application object
@@ -119,7 +131,7 @@ namespace GitHappens.Inventor_Integration
         /// <param name="inventorApplication">New inventor application object</param>
         public static void setInventorApplication(Inventor.Application inventorApplication)
         {
-            InventorApplication = inventorApplication;   
+            InventorApplication = inventorApplication;
         }
     }
 }
