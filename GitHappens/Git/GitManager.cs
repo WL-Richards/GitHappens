@@ -125,6 +125,15 @@ namespace GitHappens.Git
         }
 
         /// <summary>
+        /// See if there are actually commits waiting to be pushed
+        /// </summary>
+        /// <returns>The status of pushability</returns>
+        public static bool canPush()
+        {
+            return runGitCommand("status").Contains("Your branch is ahead of");
+        }
+
+        /// <summary>
         /// Open the Commit / Push dialog
         /// </summary>
         public static void openCommitDialog()

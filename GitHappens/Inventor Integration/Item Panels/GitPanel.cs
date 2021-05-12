@@ -13,6 +13,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
     {
         // Buttons 
         private ButtonDefinition btn_Commit;
+        private ButtonDefinition btn_Push;
         private ButtonDefinition btn_Checkout;
         private ButtonDefinition btn_Stage;
         private RibbonPanel basicGitPanel;
@@ -36,6 +37,16 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
             btn_Commit.OnExecute += onCommit;
 
+            // Create the commit button and add a method for functionality
+            btn_Push = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Push\nFile",
+                string.Format("Autodesk:VCS:Push:{0}", envName),
+                CommandTypesEnum.kFileOperationsCmdType,
+                Guid.NewGuid().ToString(), "", "",
+                IconManager.smallPushPicture,
+                IconManager.largePushPicture);
+
+            btn_Push.OnExecute += onPush;
+
 
             // Create the checkout button and create a method for functionality.
             btn_Checkout = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Pull\nChanges",
@@ -58,9 +69,29 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
             // Add all buttons to the panel
             basicGitPanel.CommandControls.AddButton(btn_Commit, true);
+            basicGitPanel.CommandControls.AddButton(btn_Push, true);
             basicGitPanel.CommandControls.AddButton(btn_Checkout, true);
             basicGitPanel.CommandControls.AddButton(btn_Stage, true);
+            
 
+        }
+
+
+        /// <summary>
+        /// Push uncommitted files
+        /// </summary>
+        /// <param name="Context"></param>
+        private void onPush(NameValueMap Context)
+        {
+            if (GitManager.canPush())
+            {
+                string pushResponse = GitManager.pushFiles();
+                MessageBox.Show(pushResponse, pushResponse.Contains("Failed to push") ? "Error" : "Information");
+            }
+            else
+            {
+                MessageBox.Show("There are no commits waiting to be pushed", "Information");
+            }
         }
 
         /// <summary>
@@ -69,6 +100,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         public void disableButtons()
         {
             btn_Commit.Enabled = false;
+            btn_Push.Enabled = false;
             btn_Checkout.Enabled = false;
             btn_Stage.Enabled = false;
         }
@@ -79,6 +111,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         public void enableButtons()
         {
             btn_Commit.Enabled = true;
+            btn_Push.Enabled = true;
             btn_Checkout.Enabled = true;
             btn_Stage.Enabled = true;
         }
@@ -138,6 +171,9 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
                 btn_Stage.Delete();
                 btn_Stage.OnExecute -= onStageFile;
+
+                btn_Push.Delete();
+                btn_Push.OnExecute -= onPush;
 
             }
         }

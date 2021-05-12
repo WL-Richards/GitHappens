@@ -12,6 +12,10 @@ namespace GitHappens
         public static IPictureDisp smallCommitPicture = PictureConverter.ImageToPictureDisp(Resources.commit_small);
         public static IPictureDisp largeCommitPicture = PictureConverter.ImageToPictureDisp(Resources.commit_large);
 
+        // Push Icon
+        public static IPictureDisp smallPushPicture = PictureConverter.ImageToPictureDisp(Resources.push_small);
+        public static IPictureDisp largePushPicture = PictureConverter.ImageToPictureDisp(Resources.push_large);
+
         // Checkout / Pull Icon
         public static IPictureDisp smallCheckoutPicture = PictureConverter.ImageToPictureDisp(Resources.checkOut_small);
         public static IPictureDisp largeCheckoutPicture = PictureConverter.ImageToPictureDisp(Resources.checkOut_large);

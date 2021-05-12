@@ -200,7 +200,10 @@
   <ItemGroup>
     <None Include="Resources\stage_small.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\push_large.png" />
+    <Content Include="Resources\push_small.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
