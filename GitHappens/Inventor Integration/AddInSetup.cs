@@ -26,7 +26,7 @@ namespace GitHappens.Inventor_Integration
             if (Git.GitManager.setupGit().Equals("Not Found"))
             {
                 // Prompted the user to set the correct Git path.
-                if (MessageBox.Show("Git Path Not Set, Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (MessageBox.Show("Git Path Not Set, Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly) == DialogResult.Yes)
                 {
                     new Settings.GitSettings().ShowDialog();
                 }
@@ -42,7 +42,7 @@ namespace GitHappens.Inventor_Integration
             if (Git.GitManager.getUserEmail().Trim().Length <= 0)
             {
                 // Check if the Git binary is Not and Prompted the user to set it.
-                if (MessageBox.Show("Git Email Not Set (Required to lock files), Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (MessageBox.Show("Git Email Not Set (Required to lock files), Would you like to do so now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly) == DialogResult.Yes)
                 {
                     new Settings.GitSettings().ShowDialog();
                 }

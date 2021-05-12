@@ -147,14 +147,18 @@ namespace GitHappens.Git
         /// <returns>Bob</returns>
         public static List<string> getFilesAffectedByCommit()
         {
+            // Get list of files from the latest commit
             string files = runGitCommand("diff-tree --no-commit-id --name-only -r HEAD..origin/main");
             List<string> fileList = new List<string>();
+
+            // Parse out the file name
             foreach(string file in files.Split('\n'))
             {
                 if(!file.Trim().Equals(".git_lock") && file.Trim().Length > 0)
                 {
                     string tempFile = file.Replace("/", "\\");
                    
+                    // Create the full file path to the files
                     fileList.Add(Directory.GetCurrentDirectory() + "\\" + tempFile);
                 }
             }
@@ -183,7 +187,6 @@ namespace GitHappens.Git
                 {
                     foreach (string item in Properties.Settings.Default.unPushedFiles)
                     {
-                        MessageBox.Show(item);
                         LockFileManager.unlockFile(item, true);
                     }
                 }
@@ -199,13 +202,13 @@ namespace GitHappens.Git
         /// </summary>
         public static void updateFiles()
         {
-            if (MessageBox.Show("This will overwrite any uncommitted changes. Are you sure you wish to continue", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show("This will overwrite any uncommitted changes. Are you sure you wish to continue", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly) == DialogResult.Yes)
             {
                 new Thread(new ThreadStart(() =>
                 {
-                    MessageBox.Show(runGitCommand("fetch"));
-                    MessageBox.Show(runGitCommand("restore ."));
-                    MessageBox.Show(runGitCommand("pull"));
+                    runGitCommand("fetch");
+                    runGitCommand("restore .");
+                    runGitCommand("pull");
                 }));
             }
         }
@@ -244,7 +247,7 @@ namespace GitHappens.Git
                 runGitCommand(String.Format("add {0}/.git_lock.lck", GitManager.getRepoRoot()));
                 runGitCommand(String.Format("commit -m \"{0}\"", commitMessage));
                 runGitCommand("push");
-                MessageBox.Show(String.Format(Path.GetFileName(filePath) + " has successfully been {0}", locked ? "locked" : "unlocked"), "Information");
+                MessageBox.Show(String.Format(Path.GetFileName(filePath) + " has successfully been {0}", locked ? "locked" : "unlocked"), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
            
         }
@@ -312,7 +315,7 @@ namespace GitHappens.Git
 
             else
             {
-                MessageBox.Show("Git was not present at the given file path (File Missing)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Git was not present at the given file path (File Missing)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 return "Git Not Present";
             }
         }

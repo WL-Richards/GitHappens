@@ -54,11 +54,11 @@ namespace GitHappens.Git
 
             if(GitManager.commitStaged(txt_commitMessage.Text).Contains("branch is up to date"))
             {
-                MessageBox.Show("No Changes To Commit", "Information");
+                MessageBox.Show("No Changes To Commit", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
-                MessageBox.Show("Successfully Committed Changes", "Success");
+                MessageBox.Show("Successfully Committed Changes", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
 
             // Clear all staged changes after commit
@@ -82,12 +82,12 @@ namespace GitHappens.Git
             // Check if we need to commit anything
             if (GitManager.commitStaged(txt_commitMessage.Text).Contains("branch is up to date"))
             {
-                MessageBox.Show("No Changes To Commit", "Information");
+                MessageBox.Show("No Changes To Commit", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
                 string pushResponse = GitManager.pushFiles();
-                MessageBox.Show(pushResponse, pushResponse.Contains("Failed to push") ? "Error" : "Information");
+                MessageBox.Show(pushResponse, pushResponse.Contains("Failed to push") ? "Error" : "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
 
             // Clear all staged changes after commit

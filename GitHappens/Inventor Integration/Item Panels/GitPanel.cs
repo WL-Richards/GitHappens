@@ -86,11 +86,11 @@ namespace GitHappens.Inventor_Integration.Item_Panels
             if (GitManager.canPush())
             {
                 string pushResponse = GitManager.pushFiles();
-                MessageBox.Show(pushResponse, pushResponse.Contains("Failed to push") ? "Error" : "Information");
+                MessageBox.Show(pushResponse, pushResponse.Contains("Failed to push") ? "Error" : "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
-                MessageBox.Show("There are no commits waiting to be pushed", "Information");
+                MessageBox.Show("There are no commits waiting to be pushed", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 
@@ -125,7 +125,7 @@ namespace GitHappens.Inventor_Integration.Item_Panels
             if (GitManager.canCommit(EnvironmentManager.getCurrentDocument()))
                 Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrentDocument());
             else
-                MessageBox.Show("The selected file has no pending change and will not be committed", "Information");
+                MessageBox.Show("The selected file has no pending change and will not be committed", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         /// <summary>
@@ -146,19 +146,19 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         {
             if (ApplicationManager.hasUnsavedChanges())
             {
-                if(MessageBox.Show("This file has not yet been saved, this commit would have no affect would you like to save now?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if(MessageBox.Show("This file has not yet been saved, this commit would have no affect would you like to save now?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly) == DialogResult.Yes)
                 {
                     ApplicationManager.saveFile();
                 }
             }
             if (GitManager.canCommit(EnvironmentManager.getCurrentDocument()))
             {
-                if (Properties.Settings.Default.stagedFiles.Count <= 0)
+                if (!Properties.Settings.Default.stagedFiles.Contains(EnvironmentManager.getCurrentDocument()))
                     Properties.Settings.Default.stagedFiles.Add(EnvironmentManager.getCurrentDocument());
                 GitManager.openCommitDialog();
             }
             else
-                MessageBox.Show("The selected file has no pending change and will not be committed", "Information");
+                MessageBox.Show("The selected file has no pending change and will not be committed", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
     
         /// <summary>

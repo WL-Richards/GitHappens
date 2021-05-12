@@ -47,7 +47,7 @@ namespace GitHappens.Inventor_Integration
                 // Before saving check to see if we can actually save this document if no inform the user that the current document is locked
                 if (BeforeOrAfter == EventTimingEnum.kBefore)
                 {
-                    MessageBox.Show("You Cannot Save this file as it is currently locked by another user", "Error");
+                    MessageBox.Show("You Cannot Save this file as it is currently locked by another user", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 HandlingCode = HandlingCodeEnum.kEventCanceled;
             }
@@ -87,7 +87,7 @@ namespace GitHappens.Inventor_Integration
                     {
 
                         // If the file is locked inform them that no changes will be saved to this file if they say the dont want to continue close the object
-                        if (MessageBox.Show("This file is currently locked by another user. Any changes made to this WILL NOT BE SAVED! Do you want to Proceed", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        if (MessageBox.Show("This file is currently locked by another user. Any changes made to this WILL NOT BE SAVED! Do you want to Proceed", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly) == DialogResult.No)
                         {
                             DocumentObject.Close();
                         }

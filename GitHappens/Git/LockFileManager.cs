@@ -113,7 +113,7 @@ namespace GitHappens.Git
         {
             if (GitManager.inGitRepo(filePath))
             {
-                string lockFilePath = GitManager.getRepoRoot() + "/.git_lock.lck";
+                string lockFilePath = GitManager.getRepoRoot().Replace("/", "\\") + "\\.git_lock.lck";
                 string topLevel = GitManager.getRepoRoot().Replace("/", "\\");
 
                 // Check if the file is not locked and we can edit it
@@ -164,7 +164,7 @@ namespace GitHappens.Git
             }
             else if (!isAutoLock)
             {
-                MessageBox.Show("This file is currently locked by another user", "Error");
+                MessageBox.Show("This file is currently locked by another user", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 
@@ -174,7 +174,7 @@ namespace GitHappens.Git
         /// <param name="filePath"></param>
         public static void lockFile(string filePath, bool isAutoLock)
         {
-            if (LockFileManager.canEditFile(filePath))
+            if (canEditFile(filePath))
             {
                 new Thread(new ThreadStart(() =>
                 {
@@ -184,7 +184,7 @@ namespace GitHappens.Git
             }
             else if (!isAutoLock)
             {
-                MessageBox.Show("This file is currently locked by another user", "Error");
+                MessageBox.Show("This file is currently locked by another user", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
     }

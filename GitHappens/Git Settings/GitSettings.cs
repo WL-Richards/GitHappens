@@ -69,13 +69,13 @@ namespace GitHappens.Settings
 
                bool testResult = GitManager.testGit();
                if(testResult)
-                    MessageBox.Show("Git Successfully Setup.", "Success");
+                    MessageBox.Show("Git Successfully Setup.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 else
-                    MessageBox.Show("Failed to reach Git.", "Error");
+                    MessageBox.Show("Failed to reach Git.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
-                MessageBox.Show("An error occurred when attempting to utilize Git. Please check the path to the executable", "Error");
+                MessageBox.Show("An error occurred when attempting to utilize Git. Please check the path to the executable", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 
