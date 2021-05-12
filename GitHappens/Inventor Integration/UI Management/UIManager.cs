@@ -47,7 +47,7 @@ namespace GitHappens.Inventor_Integration.UI_Management
         /// <summary>
         /// Alters the state of the buttons depending on if we are in a Git repo
         /// </summary>
-        private static void setupButtons()
+        public static void setupButtons()
         {
             if (!Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
             {

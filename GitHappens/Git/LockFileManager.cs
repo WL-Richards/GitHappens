@@ -24,12 +24,12 @@ namespace GitHappens.Git
         /// <returns>Array of 2 bools one for whether or not the file is exists in the lock file and one for if we can edit it</returns>
         private static bool[] getFilePerms(string filePath)
         {
-            // File is locked and we cant edit it
-            bool[] locked = { true, false };
-
+            // File is unlocked and we can edit it
+            bool[] locked = { false, true };
             // Check if the current file is in a git repository
             if (GitManager.inGitRepo(filePath))
             {
+
                 // Get the file path to the lock file
                 string lockFilePath = GitManager.getRepoRoot() + "/.git_lock.lck";
 
@@ -77,17 +77,7 @@ namespace GitHappens.Git
                         // Return the status of the file
                         return locked;
                     }
-
-                    // If the file is not found in that line set locked = false as if it is found it will be evaluated
-                    else
-                    {
-                        // File is not locked and the current user could edit it
-                        locked[0] = false;
-                        locked[1] = true;
-                    }
                 }
-
-                
             }
             // Return the status of the file
             return locked;

@@ -65,6 +65,14 @@ namespace GitHappens.Inventor_Integration
         }
 
         /// <summary>
+        /// Changes the enabled status of the buttons
+        /// </summary>
+        public static void updateUI()
+        {
+            UIManager.setupButtons();
+        }
+
+        /// <summary>
         /// Handles cleanup of non-null objects
         /// </summary>
         public static void cleanUpUI()

@@ -29,12 +29,15 @@ namespace GitHappens.Git
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_commitMessage = new System.Windows.Forms.TextBox();
             this.btn_CommitPush = new System.Windows.Forms.Button();
             this.btn_Commit = new System.Windows.Forms.Button();
             this.chkList_StagedList = new System.Windows.Forms.CheckedListBox();
             this.lb_staged = new System.Windows.Forms.Label();
+            this.commitToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.commitPushToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -50,8 +53,8 @@ namespace GitHappens.Git
             // 
             this.txt_commitMessage.AcceptsReturn = true;
             this.txt_commitMessage.AcceptsTab = true;
-            this.txt_commitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.txt_commitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_commitMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txt_commitMessage.Location = new System.Drawing.Point(13, 30);
@@ -63,11 +66,14 @@ namespace GitHappens.Git
             // btn_CommitPush
             // 
             this.btn_CommitPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_CommitPush.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_CommitPush.Location = new System.Drawing.Point(542, 349);
             this.btn_CommitPush.Name = "btn_CommitPush";
             this.btn_CommitPush.Size = new System.Drawing.Size(114, 40);
             this.btn_CommitPush.TabIndex = 2;
             this.btn_CommitPush.Text = "Commit & Push";
+            this.commitPushToolTip.SetToolTip(this.btn_CommitPush, "Commits the file to track it,\r\nthen unlocks the file and pushes it so others can " +
+        "use it.\r\n");
             this.btn_CommitPush.UseMnemonic = false;
             this.btn_CommitPush.UseVisualStyleBackColor = false;
             this.btn_CommitPush.Click += new System.EventHandler(this.btn_CommitPush_Click);
@@ -75,11 +81,13 @@ namespace GitHappens.Git
             // btn_Commit
             // 
             this.btn_Commit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_Commit.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_Commit.Location = new System.Drawing.Point(461, 349);
             this.btn_Commit.Name = "btn_Commit";
             this.btn_Commit.Size = new System.Drawing.Size(75, 40);
             this.btn_Commit.TabIndex = 3;
             this.btn_Commit.Text = "Commit";
+            this.commitToolTip.SetToolTip(this.btn_Commit, "Commits the file to track it, \r\nBut doesn\'t allow others to see changes yet.");
             this.btn_Commit.UseMnemonic = false;
             this.btn_Commit.UseVisualStyleBackColor = false;
             this.btn_Commit.Click += new System.EventHandler(this.btn_Commit_Click);
@@ -128,5 +136,7 @@ namespace GitHappens.Git
         private System.Windows.Forms.Button btn_Commit;
         private System.Windows.Forms.CheckedListBox chkList_StagedList;
         private System.Windows.Forms.Label lb_staged;
+        private System.Windows.Forms.ToolTip commitPushToolTip;
+        private System.Windows.Forms.ToolTip commitToolTip;
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading;
+using GitHappens.Inventor_Integration;
 
 namespace GitHappens.Git
 {
@@ -101,10 +102,13 @@ namespace GitHappens.Git
         /// <returns>Status of tracking</returns>
         public static bool inGitRepo(string filePath)
         {
-            if (File.Exists(filePath)){
-                // Change the current project directory to the
-                Directory.SetCurrentDirectory(Directory.GetParent(filePath).FullName);
+            // Verify the file actually exists
+            if (filePath == null || !File.Exists(filePath)){
+                return false;
             }
+
+            // Change the current project directory to the
+            Directory.SetCurrentDirectory(Directory.GetParent(filePath).FullName);
 
             // Run the status command to see if we are currently in a git repo
             return !runGitCommand("status").Contains("not a git repository") && filePath.Length > 0;
@@ -137,8 +141,20 @@ namespace GitHappens.Git
             // Update the files before push
             updateFiles();
             string pushResult = runGitCommand("push");
-            return pushResult.Contains("fatal") ? String.Format("Failed to push: {0}", pushResult) : "Push Successful";
-           
+            if (pushResult.Contains("fatal"))
+            {
+                pushResult = String.Format("Failed to push: {0}", pushResult);
+            }
+            else
+            {
+                pushResult = "Push Successful";
+
+                // Automatically Unlock the file after a successful push
+                if(Properties.Settings.Default.unlockOnPush)
+                    LockFileManager.unlockFile(EnvironmentManager.getCurrentDocument(), true);
+            }
+
+            return pushResult;           
         }
 
         /// <summary>

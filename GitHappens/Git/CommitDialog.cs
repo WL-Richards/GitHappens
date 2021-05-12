@@ -80,13 +80,15 @@ namespace GitHappens.Git
                 }
             }
 
+            // Check if we need to commit anything
             if (GitManager.commitStaged(txt_commitMessage.Text).Contains("branch is up to date"))
             {
                 MessageBox.Show("No Changes To Commit", "Information");
             }
             else
             {
-                MessageBox.Show(GitManager.pushFiles(), "Information");
+                string pushResponse = GitManager.pushFiles();
+                MessageBox.Show(pushResponse, pushResponse.Contains("Failed to push") ? "Error" : "Information");
             }
 
             // Clear all staged changes after commit

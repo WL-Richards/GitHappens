@@ -63,13 +63,27 @@ namespace GitHappens.Inventor_Integration
         /// <param name="HandlingCode"></param>
         public static void onDocumentOpen(_Document DocumentObject, string FullDocumentName, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-
-            if (BeforeOrAfter == EventTimingEnum.kAfter)
+            if (BeforeOrAfter == EventTimingEnum.kBefore)
             {
-                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
+                if (Git.GitManager.inGitRepo(FullDocumentName))
                 {
-                    if (Git.LockFileManager.isFileLocked(EnvironmentManager.getCurrentDocument()) &&
-                        !Git.LockFileManager.canEditFile(EnvironmentManager.getCurrentDocument()))
+                    if (Properties.Settings.Default.lockOnOpen)
+                    {
+                        Git.LockFileManager.lockFile(FullDocumentName, true);
+                    }
+
+                    // Update the lock file
+                    Git.GitManager.updateLockFile();
+                }
+
+            }
+
+            else if (BeforeOrAfter == EventTimingEnum.kAfter)
+            {
+                if (Git.GitManager.inGitRepo(FullDocumentName))
+                {
+                    if (Git.LockFileManager.isFileLocked(FullDocumentName) &&
+                        !Git.LockFileManager.canEditFile(FullDocumentName))
                     {
 
                         // If the file is locked inform them that no changes will be saved to this file if they say the dont want to continue close the object
@@ -83,22 +97,8 @@ namespace GitHappens.Inventor_Integration
                 // Clear and create a new UI for the different environment
                 EnvironmentManager.createUserInterface(AddInSetup.getUIManager());
             }
-            else if (BeforeOrAfter == EventTimingEnum.kBefore)
-            {
-                if (Git.GitManager.inGitRepo(EnvironmentManager.getCurrentDocument()))
-                {
-                    if (Properties.Settings.Default.lockOnOpen)
-                    {
-                        Git.LockFileManager.lockFile(EnvironmentManager.getCurrentDocument(), true);
-                    }
-
-                    // Update the lock file
-                    Git.GitManager.updateLockFile();
-                }
-
-            }
+            
             HandlingCode = HandlingCodeEnum.kEventHandled;
-
 
         }
 
@@ -111,7 +111,8 @@ namespace GitHappens.Inventor_Integration
         /// <param name="HandlingCode"></param>
         public static void onChangeDocument(_Document DocumentObject, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            MessageBox.Show(DocumentObject.DisplayName);
+            // Enable / Disable the UI buttons depending on the currently active file
+            EnvironmentManager.updateUI();
             HandlingCode = HandlingCodeEnum.kEventHandled;
         }
 
