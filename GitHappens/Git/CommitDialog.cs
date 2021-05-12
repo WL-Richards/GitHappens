@@ -29,7 +29,6 @@ namespace GitHappens.Git
             // Add all staged changes to the staged stages box
             foreach(string item in Properties.Settings.Default.stagedFiles)
             {
-                MessageBox.Show(item);
                 if (GitManager.inGitRepo(item) && repoRoot.Length <= 0)
                 {
                     repoRoot = GitManager.getRepoRoot().Replace("/", "\\"); ;

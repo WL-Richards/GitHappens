@@ -93,10 +93,11 @@ namespace GitHappens.Inventor_Integration
             {
                 documentName = ApplicationManager.getInventorApplication().ActiveDocument.FullDocumentName;
             }
-           
+            
             return documentName;
 
         }
+        
 
         /// <summary>
         /// Getter for the current environment

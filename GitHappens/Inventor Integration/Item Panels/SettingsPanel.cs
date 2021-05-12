@@ -32,7 +32,6 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
         private void onOpenGitSettings(NameValueMap Context)
         {
-            MessageBox.Show(EnvironmentManager.getCurrentDocument());
             new Settings.GitSettings().Show();
         }
 
