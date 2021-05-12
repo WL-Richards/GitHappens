@@ -144,6 +144,13 @@ namespace GitHappens.Inventor_Integration.Item_Panels
         /// <param name="Context">Caller/Handler info</param>
         private void onCommit(NameValueMap Context)
         {
+            if (ApplicationManager.hasUnsavedChanges())
+            {
+                if(MessageBox.Show("This file has not yet been saved, this commit would have no affect would you like to save now?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    ApplicationManager.saveFile();
+                }
+            }
             if (GitManager.canCommit(EnvironmentManager.getCurrentDocument()))
             {
                 if (Properties.Settings.Default.stagedFiles.Count <= 0)

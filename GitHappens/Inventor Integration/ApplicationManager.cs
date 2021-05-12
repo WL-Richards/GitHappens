@@ -116,6 +116,21 @@ namespace GitHappens.Inventor_Integration
             HandlingCode = HandlingCodeEnum.kEventHandled;
         }
 
+        /// <summary>
+        /// Check if the current file has unsaved changes
+        /// </summary>
+        /// <returns>Bool indicating if the file has changed since last save</returns>
+        public static bool hasUnsavedChanges() {
+            return getInventorApplication().ActiveDocument.Dirty;
+        }
+
+        /// <summary>
+        /// Save the currently open file
+        /// </summary>
+        public static void saveFile()
+        {
+            getInventorApplication().ActiveDocument.Save();
+        }
 
         /// <summary>
         /// Get the current inventor application object
