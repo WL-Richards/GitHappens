@@ -176,11 +176,8 @@ namespace GitHappens.Git
         {
             if (canEditFile(filePath))
             {
-                new Thread(new ThreadStart(() =>
-                {
-                    lockFileLocal(filePath);
-                    GitManager.pushLockFile(filePath, true);
-                })).Start();
+                lockFileLocal(filePath);
+                GitManager.pushLockFile(filePath, true);
             }
             else if (!isAutoLock)
             {
