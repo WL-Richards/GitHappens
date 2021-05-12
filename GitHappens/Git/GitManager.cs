@@ -142,6 +142,26 @@ namespace GitHappens.Git
         }
 
         /// <summary>
+        /// Gets a list of files getting changed by the most recent commit (used to unlock all changed files on push)
+        /// </summary>
+        /// <returns>Bob</returns>
+        public static List<string> getFilesAffectedByCommit()
+        {
+            string files = runGitCommand("diff-tree --no-commit-id --name-only -r HEAD..origin/main");
+            List<string> fileList = new List<string>();
+            foreach(string file in files.Split('\n'))
+            {
+                if(!file.Trim().Equals(".git_lock") && file.Trim().Length > 0)
+                {
+                    string tempFile = file.Replace("/", "\\");
+                   
+                    fileList.Add(Directory.GetCurrentDirectory() + "\\" + tempFile);
+                }
+            }
+            return fileList;
+        }
+
+        /// <summary>
         /// Push content to the cloud
         /// </summary>
         /// <returns>The status of completion</returns>
@@ -159,8 +179,16 @@ namespace GitHappens.Git
                 pushResult = "Push Successful";
 
                 // Automatically Unlock the file after a successful push
-                if(Properties.Settings.Default.unlockOnPush)
-                    LockFileManager.unlockFile(EnvironmentManager.getCurrentDocument(), true);
+                if (Properties.Settings.Default.unlockOnPush)
+                {
+                    foreach (string item in Properties.Settings.Default.unPushedFiles)
+                    {
+                        MessageBox.Show(item);
+                        LockFileManager.unlockFile(item, true);
+                    }
+                }
+                Properties.Settings.Default.unPushedFiles.Clear();
+                Properties.Settings.Default.Save();
             }
 
             return pushResult;           
@@ -189,7 +217,18 @@ namespace GitHappens.Git
         /// <returns>Result of the Git proc.</returns>
         public static string commitStaged(string message)
         {
-            return runGitCommand(String.Format("commit -m \"{0}\"", message));
+            string commitResponse = runGitCommand(String.Format("commit -m \"{0}\"", message));
+
+            if (!commitResponse.Contains("branch is up to date"))
+            {
+                // Add the recent commited files to a list of unpushed files
+                foreach (string file in getFilesAffectedByCommit())
+                {
+                    Properties.Settings.Default.unPushedFiles.Add(file);
+                }
+            }
+
+            return commitResponse;
         }
 
         /// <summary>
