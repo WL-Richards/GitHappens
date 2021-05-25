@@ -98,6 +98,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Git Settings\RepoWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Git Settings\RepoWizard.Designer.cs">
+      <DependentUpon>RepoWizard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Inventor Integration\AddInSetup.cs" />
     <Compile Include="Inventor Integration\ApplicationManager.cs" />
     <Compile Include="Inventor Integration\EnvironmentManager.cs" />
@@ -155,6 +161,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Git Settings\RepoWizard.resx">
+      <DependentUpon>RepoWizard.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Git\CommitDialog.resx">
       <DependentUpon>CommitDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -201,6 +210,8 @@
     <None Include="Resources\stage_small.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\createRepo_small.png" />
+    <None Include="Resources\createRepo_large.png" />
     <Content Include="Resources\push_large.png" />
     <Content Include="Resources\push_small.png" />
   </ItemGroup>

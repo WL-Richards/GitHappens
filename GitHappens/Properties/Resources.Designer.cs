@@ -103,6 +103,26 @@ namespace GitHappens.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap createRepo_large {
+            get {
+                object obj = ResourceManager.GetObject("createRepo_large", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap createRepo_small {
+            get {
+                object obj = ResourceManager.GetObject("createRepo_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap lockFile_large {
             get {
                 object obj = ResourceManager.GetObject("lockFile_large", resourceCulture);

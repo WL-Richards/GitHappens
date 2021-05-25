@@ -96,6 +96,59 @@ namespace GitHappens.Git
         }
 
         /// <summary>
+        /// Initialize a new Git repo at the specified path
+        /// </summary>
+        /// <param name="folderPath">Path to the folder where the repo should be created</param>
+        public static bool createGitRepo(string folderPath, string repoLink, bool isGitHub)
+        {
+            // File types to track
+            string gitAttributes =
+                 "*.ipt filter=lfs diff=lfs merge=lfs -text\n" +
+                 "*.iam filter = lfs diff = lfs merge = lfs - text\n" +
+                 "*.step filter = lfs diff = lfs merge = lfs - text\n" +
+                 "*.stl filter = lfs diff = lfs merge = lfs - text\n" +
+                 "*.stp filter = lfs diff = lfs merge = lfs - text\n";
+
+            // Files to ignore
+            string gitIgnore = "lockfile.lck";
+
+            // Set the current directory to the new repo
+            Directory.SetCurrentDirectory(folderPath);
+
+            // Create the repo at the correct location
+            if (runGitCommand(String.Format("init {0}", folderPath)).Contains("fatal"))
+                return false;
+
+            if (isGitHub)
+                // Switch the main branch to main instead of master
+                if (runGitCommand("branch -M main").Contains("fatal"))
+                    return false;
+
+
+            if (runGitCommand(String.Format("remote add origin {0}", repoLink)).Contains("fatal"))
+                return false;
+
+            // Add the gitIgnore and gitAttribute files
+            File.WriteAllText(Directory.GetCurrentDirectory() + "\\.gitignore", gitIgnore);
+            File.WriteAllText(Directory.GetCurrentDirectory() + "\\.gitattributes", gitAttributes);
+
+            // Track aforementioned files
+            if (runGitCommand("add .").Contains("fatal"))
+                return false;
+
+            // Commit the attributes and ignore
+            if (runGitCommand("commit -m \"Added Git version control management files\"").Contains("fatal"))
+                return false;
+
+            // Push up the main branch to the repository
+            if (runGitCommand("push -u origin main").Contains("fatal"))
+                return false;
+
+            return true;
+
+        }
+
+        /// <summary>
         /// Checks whether or not a file is currently in a Git repository
         /// </summary>
         /// <param name="filePath">Path to file</param>

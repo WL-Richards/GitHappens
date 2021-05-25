@@ -16,6 +16,8 @@ namespace GitHappens.Inventor_Integration
     {
 
         private static Inventor.Application InventorApplication;
+        // Check before we save if the file has been saved before
+        private static bool firstTimeSave = false;
 
         /// <summary>
         /// Called on Document Save
@@ -26,31 +28,37 @@ namespace GitHappens.Inventor_Integration
         /// <param name="HandlingCode">How the event was handled</param>
         public static void onDocumentSave(_Document DocumentObject, EventTimingEnum BeforeOrAfter, NameValueMap Context, out HandlingCodeEnum HandlingCode)
         {
-            // Check before we save if the file has been saved before
-            bool firstTimeSave = false;
             if (BeforeOrAfter == EventTimingEnum.kBefore)
             {
                 // If the file exists or not determines if this is a first time save
                 firstTimeSave = !System.IO.File.Exists(DocumentObject.File.FullFileName);
-            }
 
-            // Check if our current lock status allows us to edit the file
-            if (Git.LockFileManager.canEditFile(EnvironmentManager.getCurrentDocument()))
+                // Check if our current lock status allows us to edit the file
+                if (Git.LockFileManager.canEditFile(EnvironmentManager.getCurrentDocument()))
+                {
+                    // If it is a first time save don't lock the file as it doesn't exist for anyone else
+                    if (Properties.Settings.Default.lockOnSave && !firstTimeSave)
+                        Git.LockFileManager.lockFile(EnvironmentManager.getCurrentDocument(), true);
+                    HandlingCode = HandlingCodeEnum.kEventHandled;
+                }
+                else
+                {
+                   
+                   MessageBox.Show("You Cannot Save this file as it is currently locked by another user", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    
+                   HandlingCode = HandlingCodeEnum.kEventCanceled;
+                   return;
+                }
+            }
+            if(BeforeOrAfter == EventTimingEnum.kAfter && firstTimeSave)
             {
                 // If it is a first time save don't lock the file as it doesn't exist for anyone else
-                if (Properties.Settings.Default.lockOnSave && !firstTimeSave)
+                if (Properties.Settings.Default.lockOnSave)
                     Git.LockFileManager.lockFile(EnvironmentManager.getCurrentDocument(), true);
-                HandlingCode = HandlingCodeEnum.kEventHandled;
             }
-            else
-            {
-                // Before saving check to see if we can actually save this document if no inform the user that the current document is locked
-                if (BeforeOrAfter == EventTimingEnum.kBefore)
-                {
-                    MessageBox.Show("You Cannot Save this file as it is currently locked by another user", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                HandlingCode = HandlingCodeEnum.kEventCanceled;
-            }
+            EnvironmentManager.updateUI();
+            HandlingCode = HandlingCodeEnum.kEventHandled;
+
         }
 
         /// <summary>

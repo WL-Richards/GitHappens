@@ -31,5 +31,8 @@ namespace GitHappens
         // Stage Commit Icon
         public static IPictureDisp smallStagePicture = PictureConverter.ImageToPictureDisp(Resources.stage_small);
         public static IPictureDisp largeStagePicture = PictureConverter.ImageToPictureDisp(Resources.stage_large);
+
+        public static IPictureDisp smallCreateRepoPicture = PictureConverter.ImageToPictureDisp(Resources.createRepo_small);
+        public static IPictureDisp largeCreateRepoPicture = PictureConverter.ImageToPictureDisp(Resources.createRepo_large);
     }
 }

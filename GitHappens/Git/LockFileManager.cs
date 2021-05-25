@@ -122,6 +122,7 @@ namespace GitHappens.Git
                     using (StreamWriter sw = File.AppendText(lockFilePath))
                     {
                         sw.WriteLine(String.Format("{0}, {1}", filePath.Replace(topLevel, ""), GitManager.getUserEmail()));
+                        sw.Close();
                     }
                 }
             }
@@ -156,11 +157,8 @@ namespace GitHappens.Git
         {
             if (LockFileManager.canEditFile(filePath))
             {
-                new Thread(new ThreadStart(() =>
-                {
-                    unlockFileLocal(filePath);
-                    GitManager.pushLockFile(filePath, false);
-                })).Start();
+                unlockFileLocal(filePath);
+                GitManager.pushLockFile(filePath, false);
             }
             else if (!isAutoLock)
             {

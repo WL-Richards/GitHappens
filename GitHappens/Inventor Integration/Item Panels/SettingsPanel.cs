@@ -12,11 +12,21 @@ namespace GitHappens.Inventor_Integration.Item_Panels
     {
         // Settings
         private ButtonDefinition btn_GitSettings;
+        private ButtonDefinition btn_CreateRepo;
         private RibbonPanel settingsPanel;
 
         public void createSettingsPanel(RibbonTab versionControlTab, string envName)
         {
-            settingsPanel = versionControlTab.RibbonPanels.Add("Git Settings", "Autodesk:VCS:Settings", Guid.NewGuid().ToString());
+            settingsPanel = versionControlTab.RibbonPanels.Add("Advanced Options", "Autodesk:VCS:Settings", Guid.NewGuid().ToString());
+
+            btn_CreateRepo = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Create New\nCAD Repo",
+                string.Format("Autodesk:VCS:CreateRepoButton:{0}", envName),
+                CommandTypesEnum.kNonShapeEditCmdType,
+                Guid.NewGuid().ToString(), "", "",
+                IconManager.smallCreateRepoPicture,
+                IconManager.largeCreateRepoPicture);
+
+            btn_CreateRepo.OnExecute += onCreateRepo;
 
             btn_GitSettings = ApplicationManager.getInventorApplication().CommandManager.ControlDefinitions.AddButtonDefinition("Settings",
                 string.Format("Autodesk:VCS:SettingsButton:{0}", envName), 
@@ -25,9 +35,17 @@ namespace GitHappens.Inventor_Integration.Item_Panels
                 IconManager.smallSettingsPicture, 
                 IconManager.largeSettingsPicture);
 
+
+
             btn_GitSettings.OnExecute += onOpenGitSettings;
 
+            settingsPanel.CommandControls.AddButton(btn_CreateRepo, true);
             settingsPanel.CommandControls.AddButton(btn_GitSettings, true);
+        }
+
+        private void onCreateRepo(NameValueMap Context)
+        {
+            new Git_Settings.RepoWizard().ShowDialog();
         }
 
         private void onOpenGitSettings(NameValueMap Context)
@@ -46,6 +64,9 @@ namespace GitHappens.Inventor_Integration.Item_Panels
 
                 btn_GitSettings.Delete();
                 btn_GitSettings.OnExecute -= onOpenGitSettings;
+
+                btn_CreateRepo.Delete();
+                btn_CreateRepo.OnExecute -= onCreateRepo;
             }
         }
 
